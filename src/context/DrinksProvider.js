@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import DrinksContext from './DrinksContext';
 
 function DrinksProvider({ children }) {
