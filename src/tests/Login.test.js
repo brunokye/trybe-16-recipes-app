@@ -85,4 +85,23 @@ describe('Tela de Login', () => {
 
     expect(loginButton).toBeEnabled();
   });
+
+  it('Verifica se o botão de login redireciona para a tela de comidas.', async () => {
+    const { history } = renderWithRouter(<Login />);
+
+    const emailInput = screen.getByTestId(emailTestId);
+    const passwordInput = screen.getByTestId(passwordTestId);
+    const loginButton = screen.getByTestId(loginButtonTestId);
+
+    await act(() => {
+      userEvent.type(emailInput, emailTest);
+      userEvent.type(passwordInput, passwordTest);
+    });
+
+    userEvent.click(loginButton);
+
+    const { pathname } = history.location;
+
+    expect(pathname).toBe('/meals');
+  });
 });

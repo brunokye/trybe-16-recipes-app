@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { isValidEmail, isValidPassword } from '../helpers';
+import { saveUser } from '../services/userLS';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [disabled, setDisabled] = useState(true);
 
+  const history = useHistory();
+
   const doLogin = () => {
-    // ...
+    saveUser({ email });
+    history.push('/meals');
   };
 
   useEffect(() => {
