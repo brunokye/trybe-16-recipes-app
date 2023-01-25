@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
 
@@ -16,11 +17,13 @@ export default function Header({ title, searchEnabled }) {
         />)
         : ''}
 
-      <img
-        data-testid="profile-top-btn"
-        src={ profileIcon }
-        alt="profile"
-      />
+      <Link to="/profile">
+        <img
+          data-testid="profile-top-btn"
+          src={ profileIcon }
+          alt="profile"
+        />
+      </Link>
     </div>
   );
 }
