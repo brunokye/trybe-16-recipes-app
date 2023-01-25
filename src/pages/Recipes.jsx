@@ -12,6 +12,7 @@ export default function Recipes() {
         title={ pathname }
         searchEnabled
       />
+      <h1>Recipes</h1>
     </div>
   );
 }
