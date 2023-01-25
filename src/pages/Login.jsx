@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { isValidEmail, isValidPassword } from '../helpers';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -8,6 +9,13 @@ export default function Login() {
   const doLogin = () => {
     // ...
   };
+
+  useEffect(() => {
+    const isEmailValid = isValidEmail(email);
+    const isPasswordValid = isValidPassword(password);
+    const isDisabled = !(isEmailValid && isPasswordValid);
+    setDisabled(isDisabled);
+  }, [email, password]);
 
   return (
     <div>
