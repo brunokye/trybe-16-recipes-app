@@ -4,6 +4,6 @@ footer {
   justify-content: space-between;
   left: 0;
   padding: 10px 50px;
-  position: absolute;
+  position: fixed;
   width: 100%;
 }
