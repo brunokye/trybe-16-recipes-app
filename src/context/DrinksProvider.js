@@ -4,15 +4,15 @@ import DrinksContext from './DrinksContext';
 
 function DrinksProvider({ children }) {
   // TODO: Fetch the data from the API
-  const [food, setFood] = useState([]);
+  const [drinks, setDrinks] = useState([]);
 
   useEffect(() => {}, []);
 
-  // eslint-disable-next-line react/jsx-no-constructed-context-values
-  const contextValue = {
-    food,
-    setFood,
-  };
+  const contextValue = useMemo(() => ({
+    drinks,
+    setDrinks,
+  }), [drinks]);
+
   return (
     <DrinksContext.Provider value={ contextValue }>
       { children }

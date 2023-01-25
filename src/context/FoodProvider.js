@@ -1,18 +1,18 @@
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import FoodContext from './FoodContext';
 
 function FoodProvider({ children }) {
   // TODO: Fetch the data from the API
-  const [food, setFood] = useState([]);
+  const [foods, setFoods] = useState([]);
 
   useEffect(() => {}, []);
 
-  // eslint-disable-next-line react/jsx-no-constructed-context-values
-  const contextValue = {
-    food,
-    setFood,
-  };
+  const contextValue = useMemo(() => ({
+    foods,
+    setFoods,
+  }), [foods]);
+
   return (
     <FoodContext.Provider value={ contextValue }>
       { children }
