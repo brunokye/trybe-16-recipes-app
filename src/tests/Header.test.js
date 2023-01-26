@@ -3,12 +3,15 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import Recipes from '../pages/Recipes';
 import Profile from '../pages/Profile';
+import FoodProvider from '../context/FoodProvider';
 
-describe('Verifica o componente Header:', () => {
-  it('1 - Testa os elementos da tela.', () => {
+describe('Verifica o componente Header', () => {
+  it('Testa os elementos da tela', () => {
     render(
       <MemoryRouter initialEntries={ ['/meals'] }>
-        <Recipes />
+        <FoodProvider>
+          <Recipes />
+        </FoodProvider>
       </MemoryRouter>,
     );
 
@@ -21,10 +24,12 @@ describe('Verifica o componente Header:', () => {
     expect(profile).toBeInTheDocument();
   });
 
-  it('2 - Testa o click no botão search.', () => {
+  it('Testa o click no botão search', () => {
     render(
       <MemoryRouter initialEntries={ ['/drinks'] }>
-        <Recipes />
+        <FoodProvider>
+          <Recipes />
+        </FoodProvider>
       </MemoryRouter>,
     );
 
@@ -39,10 +44,39 @@ describe('Verifica o componente Header:', () => {
     expect(hiddenElement).not.toBeInTheDocument();
   });
 
-  it('3 - Testa páginas sem o botão search.', () => {
+  it('Testa fazer uma pesquisa', () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      json: jest.fn().mockResolvedValue('teste'),
+    });
+
+    render(
+      <MemoryRouter initialEntries={ ['/drinks'] }>
+        <FoodProvider>
+          <Recipes />
+        </FoodProvider>
+      </MemoryRouter>,
+    );
+
+    const searchIcon = screen.getByRole('img', { name: /search/i });
+    userEvent.click(searchIcon);
+
+    const searchBar = screen.getByRole('textbox');
+    const ingredient = screen.getByText(/ingredient/i);
+    const searchButton = screen.getByRole('button', { name: /pesquisar/i });
+
+    userEvent.type(searchBar, 'teste');
+    userEvent.click(ingredient);
+    userEvent.click(searchButton);
+
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it('Testa páginas sem o botão search', () => {
     render(
       <MemoryRouter initialEntries={ ['/profile'] }>
-        <Profile />
+        <FoodProvider>
+          <Profile />
+        </FoodProvider>
       </MemoryRouter>,
     );
 
