@@ -9,9 +9,9 @@ import FoodContext from './FoodContext';
 function FoodProvider({ children }) {
   // TODO: Fetch the data from the API
   const [foods, setFoods] = useState([]);
-  const [clickOk, setClickOk] = useState(false);
-  const [mealsSelected, setMealsSelected] = useState([]);
-  const [drinksSelected, setDrinksSelected] = useState([]);
+  const [clickOk, setClickOk] = useState(true);
+  const [mealsSelected, setMealsSelected] = useState();
+  const [drinksSelected, setDrinksSelected] = useState();
   const [searchInputValue, setSearchInputValue] = useState('');
   const [radioValue, setRadioValue] = useState(null);
 
@@ -20,13 +20,25 @@ function FoodProvider({ children }) {
   useEffect(() => {
     const fetchApi = async () => {
       if (history.location.pathname === '/meals') {
-        const data = await fetchApiMeals(radioValue, searchInputValue);
+        const data = (await fetchApiMeals(radioValue, searchInputValue));
+        const { idMeal } = data.meals.find((item) => item.idMeal);
         setMealsSelected(data);
+
+        if (data.meals.length === 1) {
+          console.log('history');
+          history.push(`/meals/${idMeal}`);
+        }
       }
 
       if (history.location.pathname === '/drinks') {
         const data = await fetchApiCockTail(radioValue, searchInputValue);
+
+        const { idDrink } = data.drinks.find((item) => item.idDrink);
         setDrinksSelected(data);
+
+        if (data.meals.length === 1) {
+          history.push(`/drinks/${idDrink}`);
+        }
       }
     };
 

@@ -2,7 +2,6 @@ export const fetchByIngredient = async (searchInput) => {
   try {
     const URL = `https://www.themealdb.com/api/json/v1/1/filter.php?i=${searchInput}`;
 
-    console.log(URL);
     const response = await fetch(URL);
 
     if (!response.ok) {
@@ -11,8 +10,6 @@ export const fetchByIngredient = async (searchInput) => {
     }
 
     const data = await response.json();
-
-    console.log('fetch', data);
 
     return data;
   } catch (error) {
@@ -23,7 +20,6 @@ export const fetchByIngredient = async (searchInput) => {
 export const fetchByName = async (searchInput) => {
   const URL = `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchInput}`;
 
-  console.log(URL);
   const response = await fetch(URL);
 
   if (!response.ok) {
@@ -40,7 +36,6 @@ export const fetchByFirstLetter = async (searchInput) => {
   try {
     const URL = `https://www.themealdb.com/api/json/v1/1/search.php?f=${searchInput}`;
 
-    console.log(URL);
     const response = await fetch(URL);
 
     if (!response.ok) {
@@ -57,23 +52,18 @@ export const fetchByFirstLetter = async (searchInput) => {
 };
 
 export const fetchApiMeals = async (selected, searchInput) => {
-  console.log(searchInput);
   switch (selected) {
   case 'ingredient':
-    fetchByIngredient(searchInput);
-    break;
+    return fetchByIngredient(searchInput);
 
   case 'name':
-    fetchByName(searchInput);
-    break;
+    return fetchByName(searchInput);
 
   case 'first-letter':
     if (selected.length > 1) {
       global.alert('Your search must have only 1 (one) character');
     }
-    fetchByFirstLetter(searchInput);
-
-    break;
+    return fetchByFirstLetter(searchInput);
 
   default:
     break;

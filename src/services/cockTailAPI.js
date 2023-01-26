@@ -9,7 +9,6 @@ export const fetchByIngredient = async (searchInput) => {
     }
 
     const data = await response.json();
-    console.log(data);
 
     return data;
   } catch (error) {
@@ -29,15 +28,6 @@ export const fetchByName = async (searchInput) => {
 
   const data = await response.json();
 
-  // console.log(data.drinks.find((item) => item.idDrink));
-  // console.log('stra', data.idDrink);
-
-  if (data.drinks.length === 1) {
-    console.log('oi');
-    const { idDrink } = data.drinks.find((item) => item.idDrink);
-    history.push(/drinks/`${idDrink}`);
-  }
-
   return data;
 };
 
@@ -53,7 +43,6 @@ export const fetchByFirstLetter = async (searchInput) => {
     }
 
     const data = await response.json();
-    console.log(data);
 
     return data;
   } catch (error) {
@@ -65,20 +54,20 @@ export const fetchApiCockTail = async (selected, searchInput) => {
   console.log(searchInput);
   switch (selected) {
   case 'ingredient':
-    fetchByIngredient(searchInput);
-    break;
+    return fetchByIngredient(searchInput);
+    // break;
 
   case 'name':
-    fetchByName(searchInput);
-    break;
+    return fetchByName(searchInput);
+    // break;
 
   case 'first-letter':
     if (selected.length > 1) {
       global.alert('Your search must have only 1 (one) character');
     }
-    fetchByFirstLetter(searchInput);
+    return fetchByFirstLetter(searchInput);
 
-    break;
+    // break;
 
   default:
     break;

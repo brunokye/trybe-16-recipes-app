@@ -1,27 +1,19 @@
 import { useContext } from 'react';
-// import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import FoodContext from '../context/FoodContext';
 
 export default function SearchBar() {
-  const { setClickOk,
-    setRadioValue } = useContext(FoodContext);
-  // console.log(drinksSelected);
-  // const history = useHistory();
+  const { setRadioValue,
+    setClickOk, clickOk } = useContext(FoodContext);
+
+  const history = useHistory();
 
   const handleClickRadio = ({ target }) => {
     setRadioValue(target.id);
   };
 
-  // const verifyLength = () => {
-  //   const idDrink = drinksSelected.drinks.find((item) => item.idDrink);
-
-  //   console.log(drinksSelected);
-
-  //   history.push(`/drinks/${idDrink}`);
-  // };
-
-  const handleClickButton = () => {
-    setClickOk(true);
+  const handleClickButton = async () => {
+    setClickOk(!clickOk);
   };
 
   return (
