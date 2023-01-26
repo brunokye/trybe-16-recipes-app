@@ -6,6 +6,7 @@ import { getUser } from '../services/userLS';
 
 export default function Profile() {
   const userEmail = getUser().email;
+
   return (
     <div>
       <Header title="Profile" />
@@ -34,6 +35,7 @@ export default function Profile() {
           <button
             type="button"
             data-testid="profile-logout-btn"
+            onClick={ () => localStorage.clear() }
           >
             Logout
           </button>

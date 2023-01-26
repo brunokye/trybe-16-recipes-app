@@ -1,4 +1,5 @@
 import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Profile from '../pages/Profile';
 import { renderWithRouter } from './helpers/renderWith';
 
@@ -7,6 +8,10 @@ const setLocalStorage = (key, data) => {
 };
 
 describe('Verifica a Tela de Profile:', () => {
+  beforeEach(() => {
+    window.localStorage.clear();
+  });
+
   it('1 - Testa os elementos da tela.', () => {
     renderWithRouter(<Profile />);
 
@@ -23,5 +28,19 @@ describe('Verifica a Tela de Profile:', () => {
     expect(doneRecipes).toBeInTheDocument();
     expect(favoriteRecipes).toBeInTheDocument();
     expect(logout).toBeInTheDocument();
+  });
+
+  it('2 - Testa o botão Logout.', () => {
+    renderWithRouter(<Profile />);
+
+    const userEmail = 'email';
+    const userData = 'teste@gmail.com';
+    setLocalStorage(userEmail, userData);
+
+    const logout = screen.getByRole('button', { name: /logout/i });
+    userEvent.click(logout);
+    window.localStorage.clear();
+
+    expect(Object.entries(window.localStorage)).toHaveLength(0);
   });
 });
