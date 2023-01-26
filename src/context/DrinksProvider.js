@@ -1,12 +1,18 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState, useMemo } from 'react';
 import DrinksContext from './DrinksContext';
+import { fetchDrinks } from '../services/cockTailAPI';
 
 function DrinksProvider({ children }) {
-  // TODO: Fetch the data from the API
   const [drinks, setDrinks] = useState([]);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const fetch = async () => {
+      const response = await fetchDrinks();
+      setDrinks(response);
+    };
+    fetch();
+  }, []);
 
   const contextValue = useMemo(() => ({
     drinks,
