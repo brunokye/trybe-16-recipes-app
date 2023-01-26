@@ -2,7 +2,8 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import { combineProviders } from '../../helpers';
+import DrinksProvider from '../../context/DrinksProvider';
+import FoodProvider from '../../context/FoodProvider';
 
 function withRouter(component, history) {
   return (
@@ -12,13 +13,14 @@ function withRouter(component, history) {
   );
 }
 
-function withRouterAndProvider(component, history, providers) {
-  const Providers = combineProviders(...providers);
+function withRouterAndProvider(component, history) {
   return (
     <Router history={ history }>
-      <Providers>
-        {component}
-      </Providers>
+      <FoodProvider>
+        <DrinksProvider>
+          {component}
+        </DrinksProvider>
+      </FoodProvider>
     </Router>
   );
 }
@@ -41,11 +43,10 @@ export function renderWithRouterAndProviders(
   {
     initialEntries = ['/'],
     history = createMemoryHistory({ initialEntries }),
-    providers = [],
   } = {},
 ) {
   return {
-    ...render(withRouterAndProvider(component, history, providers)),
+    ...render(withRouterAndProvider(component, history)),
     history,
   };
 }

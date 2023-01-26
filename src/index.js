@@ -6,17 +6,16 @@ import FoodProvider from './context/FoodProvider';
 import './styles/index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { combineProviders } from './helpers';
-
-const Providers = combineProviders(DrinksProvider, FoodProvider);
 
 ReactDOM
   .createRoot(document.getElementById('root'))
   .render(
     <BrowserRouter>
-      <Providers>
-        <App />
-      </Providers>
+      <FoodProvider>
+        <DrinksProvider>
+          <App />
+        </DrinksProvider>
+      </FoodProvider>
     </BrowserRouter>,
   );
 
