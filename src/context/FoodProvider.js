@@ -1,17 +1,27 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState, useMemo } from 'react';
 import FoodContext from './FoodContext';
+import { fetchMeals } from '../services/mealAPI';
 
 function FoodProvider({ children }) {
-  // TODO: Fetch the data from the API
   const [foods, setFoods] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const fetch = async () => {
+      const response = await fetchMeals();
+      setFoods(response);
+    };
+    setIsLoading(true);
+    fetch();
+    setIsLoading(false);
+  }, []);
 
   const contextValue = useMemo(() => ({
     foods,
     setFoods,
-  }), [foods]);
+    isLoading,
+  }), [foods, isLoading]);
 
   return (
     <FoodContext.Provider value={ contextValue }>
