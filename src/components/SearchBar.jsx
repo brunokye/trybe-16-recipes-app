@@ -1,24 +1,19 @@
-import { useContext, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useContext } from 'react';
+// import { useHistory } from 'react-router-dom';
 import FoodContext from '../context/FoodContext';
-import { fetchApiMeals } from '../services/mealAPI';
+// import { fetchApiMeals } from '../services/mealAPI';
 
 export default function SearchBar() {
-  const { searchInputValue } = useContext(FoodContext);
-  const [radioValue, setRadioValue] = useState(null);
-  const history = useHistory();
+  const { setClickOk,
+    setRadioValue } = useContext(FoodContext);
+  // const history = useHistory();
 
   const handleClickRadio = ({ target }) => {
     setRadioValue(target.id);
-    console.log(target.id);
-    console.log(searchInputValue);
   };
 
-  const handleClickButton = async () => {
-    if (history.location.pathname === '/meals') {
-      const data = await fetchApiMeals(radioValue);
-      console.log(data);
-    }
+  const handleClickButton = () => {
+    setClickOk(true);
   };
 
   return (
