@@ -7,7 +7,7 @@ import RecipeInProgress from './pages/RecipeInProgress';
 import Profile from './pages/Profile';
 import DoneRecipes from './pages/DoneRecipes';
 import Favorites from './pages/Favorites';
-import './styles/App.css';
+import './styles/app.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {

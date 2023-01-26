@@ -12,7 +12,7 @@ export default function Profile() {
       <span data-testid="profile-email">{ userEmail }</span>
 
       <div>
-        <Link to="/">
+        <Link to="/done-recipes">
           <button
             type="button"
             data-testid="profile-done-btn"
