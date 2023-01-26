@@ -1,5 +1,6 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import FoodProvider from '../context/FoodProvider';
 import Profile from '../pages/Profile';
 import { renderWithRouter } from './helpers/renderWith';
 
@@ -13,7 +14,11 @@ describe('Verifica a Tela de Profile:', () => {
   });
 
   it('1 - Testa os elementos da tela.', () => {
-    renderWithRouter(<Profile />);
+    renderWithRouter(
+      <FoodProvider>
+        <Profile />
+      </FoodProvider>,
+    );
 
     const userEmail = 'email';
     const userData = 'teste@gmail.com';
@@ -31,7 +36,11 @@ describe('Verifica a Tela de Profile:', () => {
   });
 
   it('2 - Testa o botão Logout.', () => {
-    renderWithRouter(<Profile />);
+    renderWithRouter(
+      <FoodProvider>
+        <Profile />
+      </FoodProvider>,
+    );
 
     const userEmail = 'email';
     const userData = 'teste@gmail.com';
