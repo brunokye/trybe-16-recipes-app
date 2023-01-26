@@ -2,6 +2,7 @@
 import PropTypes from 'prop-types';
 import { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { fetchApiCockTail } from '../services/cockTailAPI';
 import { fetchApiMeals } from '../services/mealAPI';
 import FoodContext from './FoodContext';
 
@@ -10,6 +11,7 @@ function FoodProvider({ children }) {
   const [foods, setFoods] = useState([]);
   const [clickOk, setClickOk] = useState(false);
   const [mealsSelected, setMealsSelected] = useState([]);
+  const [drinksSelected, setDrinksSelected] = useState([]);
   const [searchInputValue, setSearchInputValue] = useState('');
   const [radioValue, setRadioValue] = useState(null);
 
@@ -23,8 +25,8 @@ function FoodProvider({ children }) {
       }
 
       if (history.location.pathname === '/drinks') {
-        const data = await fetchApiMeals(radioValue, searchInputValue);
-        setMealsSelected(data);
+        const data = await fetchApiCockTail(radioValue, searchInputValue);
+        setDrinksSelected(data);
       }
     };
 
@@ -41,6 +43,7 @@ function FoodProvider({ children }) {
     radioValue,
     setRadioValue,
     mealsSelected,
+    drinksSelected,
   }), [foods]);
 
   return (
