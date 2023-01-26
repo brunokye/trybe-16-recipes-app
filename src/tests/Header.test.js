@@ -1,16 +1,32 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { act } from 'react-dom/test-utils';
+
 import Recipes from '../pages/Recipes';
 import Profile from '../pages/Profile';
+import { renderWithRouterAndProviders } from './helpers/renderWith';
+import { emptyDrinkResponse, emptyFoodResponse } from './mocks';
 
 describe('Verifica o componente Header:', () => {
-  it('1 - Testa os elementos da tela.', () => {
-    render(
-      <MemoryRouter initialEntries={ ['/meals'] }>
-        <Recipes />
-      </MemoryRouter>,
-    );
+  beforeEach(() => {
+    jest.spyOn(global, 'fetch')
+      .mockImplementation((param) => ({
+        json: async () => {
+          if (param.match(/thecocktail/i)) {
+            return emptyDrinkResponse;
+          }
+
+          return emptyFoodResponse;
+        },
+      }));
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('Testa os elementos da tela.', async () => {
+    await act(async () => renderWithRouterAndProviders(<Recipes />, { initialEntries: ['/meals'] }));
 
     const title = screen.getByText(/meals/i);
     const search = screen.getByRole('img', { name: /search/i });
@@ -21,12 +37,8 @@ describe('Verifica o componente Header:', () => {
     expect(profile).toBeInTheDocument();
   });
 
-  it('2 - Testa o click no botão search.', () => {
-    render(
-      <MemoryRouter initialEntries={ ['/drinks'] }>
-        <Recipes />
-      </MemoryRouter>,
-    );
+  it('Testa o click no botão search.', async () => {
+    await act(async () => renderWithRouterAndProviders(<Recipes />, { initialEntries: ['/drinks'] }));
 
     const search = screen.getByRole('img', { name: /search/i });
     userEvent.click(search);
@@ -39,12 +51,8 @@ describe('Verifica o componente Header:', () => {
     expect(hiddenElement).not.toBeInTheDocument();
   });
 
-  it('3 - Testa páginas sem o botão search.', () => {
-    render(
-      <MemoryRouter initialEntries={ ['/profile'] }>
-        <Profile />
-      </MemoryRouter>,
-    );
+  it('Testa páginas sem o botão search.', async () => {
+    await act(async () => renderWithRouterAndProviders(<Profile />, { initialEntries: ['/profile'] }));
 
     const search = screen.queryByRole('img', { name: /search/i });
     expect(search).not.toBeInTheDocument();

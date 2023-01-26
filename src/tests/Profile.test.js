@@ -12,7 +12,7 @@ describe('Verifica a Tela de Profile:', () => {
     window.localStorage.clear();
   });
 
-  it('1 - Testa os elementos da tela.', () => {
+  it('Testa os elementos da tela.', () => {
     renderWithRouter(<Profile />);
 
     const userEmail = 'email';
@@ -30,7 +30,7 @@ describe('Verifica a Tela de Profile:', () => {
     expect(logout).toBeInTheDocument();
   });
 
-  it('2 - Testa o botão Logout.', () => {
+  it('Testa o botão Logout.', () => {
     renderWithRouter(<Profile />);
 
     const userEmail = 'email';
