@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import FoodContext from '../context/FoodContext';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
+import SearchBar from './SearchBar';
 
 export default function Header({ title, searchEnabled }) {
+  const { setSearchInputValue } = useContext(FoodContext);
+
   const [bar, setBar] = useState(false);
 
   const searchBar = () => {
     if (bar === false) setBar(true);
     if (bar === true) setBar(false);
+  };
+
+  const handleChangeSearchInput = ({ target }) => {
+    setSearchInputValue(target.value);
   };
 
   return (
@@ -20,6 +28,7 @@ export default function Header({ title, searchEnabled }) {
         <input
           data-testid="search-input"
           type="text"
+          onChange={ handleChangeSearchInput }
         />)
         : ''}
 
@@ -43,6 +52,10 @@ export default function Header({ title, searchEnabled }) {
           alt="profile"
         />
       </Link>
+
+      <div className="search">
+        {bar && <SearchBar />}
+      </div>
 
     </div>
   );

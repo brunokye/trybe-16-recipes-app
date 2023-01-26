@@ -2,16 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 // import DrinksProvider from './context/DrinksProvider';
-// import FoodProvider from './context/FoodProvider';
-import './styles/index.css';
 import App from './App';
+import FoodProvider from './context/FoodProvider';
+
 import * as serviceWorker from './serviceWorker';
+import './styles/index.css';
 
 ReactDOM
   .createRoot(document.getElementById('root'))
   .render(
     <BrowserRouter>
-      <App />
+      <FoodProvider>
+        <App />
+      </FoodProvider>
     </BrowserRouter>,
   );
 
