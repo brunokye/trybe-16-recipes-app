@@ -21,23 +21,31 @@ function FoodProvider({ children }) {
     const fetchApi = async () => {
       if (history.location.pathname === '/meals') {
         const data = (await fetchApiMeals(radioValue, searchInputValue));
-        const { idMeal } = data.meals.find((item) => item.idMeal);
-        setMealsSelected(data);
 
-        if (data.meals.length === 1) {
-          console.log('history');
-          history.push(`/meals/${idMeal}`);
+        if (data) {
+          const { idMeal } = data.meals.find((item) => item.idMeal);
+
+          setMealsSelected(data);
+
+          if (data.meals.length === 1) {
+            console.log('history');
+            history.push(`/meals/${idMeal}`);
+          }
         }
       }
 
       if (history.location.pathname === '/drinks') {
         const data = await fetchApiCockTail(radioValue, searchInputValue);
+        console.log(data);
 
-        const { idDrink } = data.drinks.find((item) => item.idDrink);
-        setDrinksSelected(data);
+        if (data) {
+          const { idDrink } = data.drinks.find((item) => item.idDrink);
 
-        if (data.meals.length === 1) {
-          history.push(`/drinks/${idDrink}`);
+          setDrinksSelected(data);
+
+          if (data.drinks.length === 1) {
+            history.push(`/drinks/${idDrink}`);
+          }
         }
       }
     };
