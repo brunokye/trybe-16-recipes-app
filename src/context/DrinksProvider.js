@@ -10,6 +10,8 @@ function DrinksProvider({ children }) {
   const [drinks, setDrinks] = useState([]);
   const [clickOkD, setClickOkD] = useState(true);
   const [drinksSelected, setDrinksSelected] = useState();
+  const [drinksSelectedLength, setDrinksSelectedLength] = useState(null);
+  const [ok, setOk] = useState(false);
 
   const [searchInputValueD, setSearchInputValueD] = useState('');
   const [radioValueD, setRadioValueD] = useState(null);
@@ -22,16 +24,22 @@ function DrinksProvider({ children }) {
         const data = await fetchApiCockTail(radioValueD, searchInputValueD);
 
         if (data) {
-          console.log(data);
+          if (data.drinks === null) {
+            return global
+              .alert('Sorry, we haven\'t found any recipes for these filters.');
+          }
+
           const { idDrink } = data.drinks.find((item) => item.idDrink);
 
           setDrinksSelected(data);
+          setDrinksSelectedLength(data.drinks.length);
 
           if (data.drinks.length === 1) {
             history.push(`/drinks/${idDrink}`);
           }
         }
       }
+      setOk(!ok);
     };
 
     fetchApi();
@@ -45,7 +53,8 @@ function DrinksProvider({ children }) {
     setRadioValueD,
     clickOkD,
     setSearchInputValueD,
-  }), [drinks]);
+    drinksSelectedLength,
+  }), [ok]);
 
   return (
     <DrinksContext.Provider value={ contextValue }>

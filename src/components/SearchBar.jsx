@@ -1,21 +1,25 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import DrinksContext from '../context/DrinksContext';
 import FoodContext from '../context/FoodContext';
 
 export default function SearchBar() {
   const { setRadioValueM,
-    setClickOkM, clickOkM } = useContext(FoodContext);
+    setClickOkM } = useContext(FoodContext);
   const { setRadioValueD,
-    setClickOkD, clickOkD } = useContext(DrinksContext);
+    setClickOkD } = useContext(DrinksContext);
+
+  const [click, setClick] = useState(false);
 
   const handleClickRadio = ({ target }) => {
     setRadioValueM(target.id);
     setRadioValueD(target.id);
   };
 
-  const handleClickButton = async () => {
-    setClickOkM(!clickOkM);
-    setClickOkD(!clickOkD);
+  const handleClickButton = () => {
+    setClick(!click);
+
+    setClickOkM(click);
+    setClickOkD(click);
   };
 
   return (
