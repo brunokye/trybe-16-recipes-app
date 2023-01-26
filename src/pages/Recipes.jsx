@@ -10,13 +10,13 @@ import '../styles/Recipes.css';
 export default function Recipes() {
   const location = useLocation();
   const pathname = location.pathname === '/meals' ? 'Meals' : 'Drinks';
-  const { foods } = useContext(FoodContext);
-  const { drinks } = useContext(DrinksContext);
   const isFood = pathname === 'Meals';
-  const recipes = isFood ? foods : drinks;
+  const context = isFood ? FoodContext : DrinksContext;
+  const { recipes, categories } = useContext(context);
   const idField = isFood ? 'idMeal' : 'idDrink';
 
   const pageSize = 12;
+  const categorieSize = 5;
 
   return (
     <div>
@@ -25,6 +25,17 @@ export default function Recipes() {
         searchEnabled
       />
       <h1>Recipes</h1>
+      <div className="categories-container">
+        { categories.slice(0, categorieSize).map((category) => (
+          <button
+            type="button"
+            data-testid={ `${category.strCategory}-category-filter` }
+            key={ category.strCategory }
+          >
+            { category.strCategory }
+          </button>
+        ))}
+      </div>
       <div className="card-container">
         { recipes.slice(0, pageSize).map((recipe, index) => (
           <RecipeCard
