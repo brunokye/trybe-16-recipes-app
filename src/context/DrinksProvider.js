@@ -2,26 +2,27 @@
 import PropTypes from 'prop-types';
 import { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { fetchApiCockTail } from '../services/cockTailAPI';
 import DrinksContext from './DrinksContext';
 
 function DrinksProvider({ children }) {
   // TODO: Fetch the data from the API
   const [drinks, setDrinks] = useState([]);
-  const [clickOk, setClickOk] = useState(true);
+  const [clickOkD, setClickOkD] = useState(true);
   const [drinksSelected, setDrinksSelected] = useState();
 
-  const [searchInputValue, setSearchInputValue] = useState('');
-  const [radioValue, setRadioValue] = useState(null);
+  const [searchInputValueD, setSearchInputValueD] = useState('');
+  const [radioValueD, setRadioValueD] = useState(null);
 
   const history = useHistory();
 
   useEffect(() => {
     const fetchApi = async () => {
       if (history.location.pathname === '/drinks') {
-        const data = await fetchApiCockTail(radioValue, searchInputValue);
-        console.log(data);
+        const data = await fetchApiCockTail(radioValueD, searchInputValueD);
 
         if (data) {
+          console.log(data);
           const { idDrink } = data.drinks.find((item) => item.idDrink);
 
           setDrinksSelected(data);
@@ -34,15 +35,16 @@ function DrinksProvider({ children }) {
     };
 
     fetchApi();
-  }, [clickOk]);
+  }, [clickOkD]);
 
   const contextValue = useMemo(() => ({
     drinks,
     setDrinks,
     drinksSelected,
-    setClickOk,
-    setRadioValue,
-    setSearchInputValue,
+    setClickOkD,
+    setRadioValueD,
+    clickOkD,
+    setSearchInputValueD,
   }), [drinks]);
 
   return (

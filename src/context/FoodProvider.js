@@ -8,17 +8,18 @@ import FoodContext from './FoodContext';
 function FoodProvider({ children }) {
   // TODO: Fetch the data from the API
   const [foods, setFoods] = useState([]);
-  const [clickOk, setClickOk] = useState(true);
+  const [clickOkM, setClickOkM] = useState(true);
   const [mealsSelected, setMealsSelected] = useState();
-  const [searchInputValue, setSearchInputValue] = useState('');
-  const [radioValue, setRadioValue] = useState(null);
+
+  const [searchInputValueM, setSearchInputValueM] = useState('');
+  const [radioValueM, setRadioValueM] = useState(null);
 
   const history = useHistory();
 
   useEffect(() => {
     const fetchApi = async () => {
       if (history.location.pathname === '/meals') {
-        const data = (await fetchApiMeals(radioValue, searchInputValue));
+        const data = (await fetchApiMeals(radioValueM, searchInputValueM));
 
         if (data) {
           const { idMeal } = data.meals.find((item) => item.idMeal);
@@ -33,17 +34,17 @@ function FoodProvider({ children }) {
     };
 
     fetchApi();
-  }, [clickOk]);
+  }, [clickOkM]);
 
   const contextValue = useMemo(() => ({
     foods,
     setFoods,
-    searchInputValue,
-    setSearchInputValue,
-    setClickOk,
-    clickOk,
-    radioValue,
-    setRadioValue,
+    searchInputValueM,
+    setSearchInputValueM,
+    setClickOkM,
+    clickOkM,
+    radioValueM,
+    setRadioValueM,
     mealsSelected,
   }), [foods]);
 

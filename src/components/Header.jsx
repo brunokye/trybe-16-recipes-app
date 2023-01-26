@@ -1,13 +1,15 @@
 import PropTypes from 'prop-types';
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import DrinksContext from '../context/DrinksContext';
 import FoodContext from '../context/FoodContext';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
 import SearchBar from './SearchBar';
 
 export default function Header({ title, searchEnabled }) {
-  const { setSearchInputValue } = useContext(FoodContext);
+  const { setSearchInputValueM } = useContext(FoodContext);
+  const { setSearchInputValueD } = useContext(DrinksContext);
 
   const [bar, setBar] = useState(false);
 
@@ -17,7 +19,8 @@ export default function Header({ title, searchEnabled }) {
   };
 
   const handleChangeSearchInput = ({ target }) => {
-    setSearchInputValue(target.value);
+    setSearchInputValueM(target.value);
+    setSearchInputValueD(target.value);
   };
 
   return (

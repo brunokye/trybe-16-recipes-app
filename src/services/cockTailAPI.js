@@ -1,6 +1,8 @@
 export const fetchByIngredient = async (searchInput) => {
   try {
     const URL = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${searchInput}`;
+    console.log(URL);
+    console.log(searchInput);
     const response = await fetch(URL);
 
     if (!response.ok) {
@@ -51,7 +53,6 @@ export const fetchByFirstLetter = async (searchInput) => {
 };
 
 export const fetchApiCockTail = async (selected, searchInput) => {
-  console.log(searchInput);
   switch (selected) {
   case 'ingredient':
     return fetchByIngredient(searchInput);
