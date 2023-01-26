@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 export default function Recipes() {
   const location = useLocation();
@@ -13,6 +14,7 @@ export default function Recipes() {
         searchEnabled
       />
       <h1>Recipes</h1>
+      <Footer />
     </div>
   );
 }
