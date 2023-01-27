@@ -1,32 +1,20 @@
-import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
+import SearchBar from './SearchBar';
 
 export default function Header({ title, searchEnabled }) {
   const [bar, setBar] = useState(false);
 
-  const searchBar = () => {
-    if (bar === false) setBar(true);
-    if (bar === true) setBar(false);
-  };
-
   return (
     <div>
       <span data-testid="page-title">{ title }</span>
-
-      { bar ? (
-        <input
-          data-testid="search-input"
-          type="text"
-        />)
-        : ''}
-
       { searchEnabled ? (
         <button
           type="button"
-          onClick={ searchBar }
+          onClick={ () => setBar(!bar) }
         >
           <img
             data-testid="search-top-btn"
@@ -43,6 +31,10 @@ export default function Header({ title, searchEnabled }) {
           alt="profile"
         />
       </Link>
+
+      <div className="search">
+        {bar && <SearchBar />}
+      </div>
 
     </div>
   );
