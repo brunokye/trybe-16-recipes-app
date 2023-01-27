@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import RecipeCard from '../components/RecipeCard';
 import FilterBtn from '../components/FilterBtn';
-import { Link } from 'react-router-dom';
 
 const TYPES = ['All', 'Meals', 'Drinks'];
 
