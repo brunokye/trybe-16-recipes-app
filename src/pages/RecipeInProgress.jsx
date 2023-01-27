@@ -45,11 +45,14 @@ function RecipeInProgress() {
               key={ i }
               data-testid={ `${i}-ingredient-name-and-measure` }
             >
-              {meals[`strIngredient${i}`]}
-              {' '}
-              -
-              {' '}
-              {meals[`strMeasure${i}`]}
+              <label htmlFor={ i } data-testid={ `${i}-ingredient-step` }>
+                <input type="checkbox" id={ i } />
+                {meals[`strIngredient${i}`]}
+                {' '}
+                -
+                {' '}
+                {meals[`strMeasure${i}`]}
+              </label>
             </li>,
           );
         }
@@ -63,11 +66,14 @@ function RecipeInProgress() {
               key={ i }
               data-testid={ `${i}-ingredient-name-and-measure` }
             >
-              {drinks[`strIngredient${i}`]}
-              {' '}
-              -
-              {' '}
-              {drinks[`strMeasure${i}`]}
+              <label htmlFor={ i } data-testid={ `${i}-ingredient-step` }>
+                <input type="checkbox" id={ i } />
+                {drinks[`strIngredient${i}`]}
+                {' '}
+                -
+                {' '}
+                {drinks[`strMeasure${i}`]}
+              </label>
             </li>,
           );
         }
