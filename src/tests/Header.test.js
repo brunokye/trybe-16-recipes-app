@@ -1,19 +1,32 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { act } from 'react-dom/test-utils';
+
 import Recipes from '../pages/Recipes';
 import Profile from '../pages/Profile';
-import FoodProvider from '../context/FoodProvider';
+import { renderWithRouterAndProviders } from './helpers/renderWith';
+import { emptyDrinkResponse, emptyFoodResponse } from './mocks';
 
-describe('Verifica o componente Header', () => {
-  it('Testa os elementos da tela', () => {
-    render(
-      <MemoryRouter initialEntries={ ['/meals'] }>
-        <FoodProvider>
-          <Recipes />
-        </FoodProvider>
-      </MemoryRouter>,
-    );
+describe('Verifica o componente Header:', () => {
+  beforeEach(() => {
+    jest.spyOn(global, 'fetch')
+      .mockImplementation((param) => ({
+        json: async () => {
+          if (param.match(/thecocktail/i)) {
+            return emptyDrinkResponse;
+          }
+
+          return emptyFoodResponse;
+        },
+      }));
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('Testa os elementos da tela.', async () => {
+    await act(async () => renderWithRouterAndProviders(<Recipes />, { initialEntries: ['/meals'] }));
 
     const title = screen.getByText(/meals/i);
     const search = screen.getByRole('img', { name: /search/i });
@@ -24,14 +37,8 @@ describe('Verifica o componente Header', () => {
     expect(profile).toBeInTheDocument();
   });
 
-  it('Testa o click no botão search', () => {
-    render(
-      <MemoryRouter initialEntries={ ['/drinks'] }>
-        <FoodProvider>
-          <Recipes />
-        </FoodProvider>
-      </MemoryRouter>,
-    );
+  it('Testa o click no botão search.', async () => {
+    await act(async () => renderWithRouterAndProviders(<Recipes />, { initialEntries: ['/drinks'] }));
 
     const search = screen.getByRole('img', { name: /search/i });
     userEvent.click(search);
@@ -44,41 +51,8 @@ describe('Verifica o componente Header', () => {
     expect(hiddenElement).not.toBeInTheDocument();
   });
 
-  it('Testa fazer uma pesquisa', () => {
-    global.fetch = jest.fn().mockResolvedValue({
-      json: jest.fn().mockResolvedValue('teste'),
-    });
-
-    render(
-      <MemoryRouter initialEntries={ ['/drinks'] }>
-        <FoodProvider>
-          <Recipes />
-        </FoodProvider>
-      </MemoryRouter>,
-    );
-
-    const searchIcon = screen.getByRole('img', { name: /search/i });
-    userEvent.click(searchIcon);
-
-    const searchBar = screen.getByRole('textbox');
-    const ingredient = screen.getByText(/ingredient/i);
-    const searchButton = screen.getByRole('button', { name: /pesquisar/i });
-
-    userEvent.type(searchBar, 'teste');
-    userEvent.click(ingredient);
-    userEvent.click(searchButton);
-
-    expect(global.fetch).toHaveBeenCalledTimes(1);
-  });
-
-  it('Testa páginas sem o botão search', () => {
-    render(
-      <MemoryRouter initialEntries={ ['/profile'] }>
-        <FoodProvider>
-          <Profile />
-        </FoodProvider>
-      </MemoryRouter>,
-    );
+  it('Testa páginas sem o botão search.', async () => {
+    await act(async () => renderWithRouterAndProviders(<Profile />, { initialEntries: ['/profile'] }));
 
     const search = screen.queryByRole('img', { name: /search/i });
     expect(search).not.toBeInTheDocument();

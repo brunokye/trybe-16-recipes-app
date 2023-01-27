@@ -1,62 +1,38 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import PropTypes from 'prop-types';
 import { useEffect, useMemo, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { fetchApiMeals } from '../services/mealAPI';
 import FoodContext from './FoodContext';
+import {
+  fetchMeals,
+  fetchMealsCategories,
+  fetchMealsByCategory,
+} from '../services/mealAPI';
 
 function FoodProvider({ children }) {
-  // TODO: Fetch the data from the API
   const [foods, setFoods] = useState([]);
-  const [clickOkM, setClickOkM] = useState(true);
-  const [mealsSelected, setMealsSelected] = useState([]);
-  const [mealsSelectedLength, setMealsSelectedLength] = useState(null);
-  const [ok, setOk] = useState(false);
-
-  const [searchInputValueM, setSearchInputValueM] = useState('');
-  const [radioValueM, setRadioValueM] = useState(null);
-
-  const history = useHistory();
+  const [foodCategories, setFoodCategories] = useState([]);
+  const [categoryFilter, setCategoryFilter] = useState('');
 
   useEffect(() => {
-    const fetchApi = async () => {
-      if (history.location.pathname === '/meals') {
-        const data = (await fetchApiMeals(radioValueM, searchInputValueM));
-
-        if (data) {
-          if (data.meals === null) {
-            return global
-              .alert('Sorry, we haven\'t found any recipes for these filters.');
-          }
-
-          const { idMeal } = data.meals.find((item) => item.idMeal);
-
-          setMealsSelected(data);
-          setMealsSelectedLength(data.meals.length);
-
-          if (data.meals.length === 1) {
-            history.push(`/meals/${idMeal}`);
-          }
-        }
+    const fetch = async () => {
+      const responseCategories = await fetchMealsCategories();
+      setFoodCategories(responseCategories);
+      if (categoryFilter === '') {
+        const response = await fetchMeals();
+        setFoods(response);
+        return;
       }
-
-      setOk(!ok);
+      const response = await fetchMealsByCategory(categoryFilter);
+      setFoods(response);
     };
-    fetchApi();
-  }, [clickOkM]);
+    fetch();
+  }, [categoryFilter]);
 
   const contextValue = useMemo(() => ({
-    foods,
-    setFoods,
-    searchInputValueM,
-    setSearchInputValueM,
-    setClickOkM,
-    clickOkM,
-    radioValueM,
-    setRadioValueM,
-    mealsSelected,
-    mealsSelectedLength,
-  }), [ok]);
+    recipes: foods,
+    categories: foodCategories,
+    categoryFilter,
+    setCategoryFilter,
+  }), [foods, foodCategories, categoryFilter]);
 
   return (
     <FoodContext.Provider value={ contextValue }>

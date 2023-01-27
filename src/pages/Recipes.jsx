@@ -1,18 +1,24 @@
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import { useLocation } from 'react-router-dom';
-import DrinksRender from '../components/DrinksRender';
+
 import Footer from '../components/Footer';
-import Header from '../components/Header';
-import MealsRender from '../components/MealsRender';
-import DrinksContext from '../context/DrinksContext';
 import FoodContext from '../context/FoodContext';
+import DrinksContext from '../context/DrinksContext';
+import RecipeCard from '../components/RecipeCard';
+import Header from '../components/Header';
+
+import '../styles/Recipes.css';
 
 export default function Recipes() {
-  const { mealsSelectedLength } = useContext(FoodContext);
-  const { drinksSelectedLength } = useContext(DrinksContext);
-
   const location = useLocation();
   const pathname = location.pathname === '/meals' ? 'Meals' : 'Drinks';
+  const isFood = pathname === 'Meals';
+  const context = isFood ? FoodContext : DrinksContext;
+  const { recipes, categories, setCategoryFilter, categoryFilter } = useContext(context);
+  const idField = isFood ? 'idMeal' : 'idDrink';
+
+  const pageSize = 12;
+  const categorieSize = 5;
 
   return (
     <div>
@@ -21,17 +27,40 @@ export default function Recipes() {
         searchEnabled
       />
       <h1>Recipes</h1>
-
-      {
-        mealsSelectedLength >= 1
-      && <MealsRender />
-      }
-
-      {
-        drinksSelectedLength >= 1
-        && <DrinksRender />
-      }
-
+      <div className="categories-container">
+        { categories.slice(0, categorieSize).map((category) => (
+          <button
+            type="button"
+            data-testid={ `${category.strCategory}-category-filter` }
+            key={ category.strCategory }
+            onClick={ () => {
+              const cat = categoryFilter === category.strCategory
+                ? '' : category.strCategory;
+              setCategoryFilter(cat);
+            } }
+          >
+            { category.strCategory }
+          </button>
+        ))}
+        <button
+          type="button"
+          data-testid="All-category-filter"
+          onClick={ () => setCategoryFilter('') }
+        >
+          All
+        </button>
+      </div>
+      <div className="card-container">
+        { recipes.slice(0, pageSize).map((recipe, index) => (
+          <RecipeCard
+            key={ recipe[idField] }
+            recipe={ recipe }
+            index={ index }
+            id={ recipe[idField] }
+            basePath={ isFood ? '/meals' : '/drinks' }
+          />
+        ))}
+      </div>
       <Footer />
     </div>
   );

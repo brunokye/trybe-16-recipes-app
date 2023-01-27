@@ -1,60 +1,38 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import PropTypes from 'prop-types';
 import { useEffect, useMemo, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { fetchApiCockTail } from '../services/cockTailAPI';
 import DrinksContext from './DrinksContext';
+import {
+  fetchDrinks,
+  fetchDrinksCategories,
+  fetchDrinksByCategory,
+} from '../services/cockTailAPI';
 
 function DrinksProvider({ children }) {
-  // TODO: Fetch the data from the API
   const [drinks, setDrinks] = useState([]);
-  const [clickOkD, setClickOkD] = useState(true);
-  const [drinksSelected, setDrinksSelected] = useState();
-  const [drinksSelectedLength, setDrinksSelectedLength] = useState(null);
-  const [ok, setOk] = useState(false);
-
-  const [searchInputValueD, setSearchInputValueD] = useState('');
-  const [radioValueD, setRadioValueD] = useState(null);
-
-  const history = useHistory();
+  const [drinkCategories, setDrinkCategories] = useState([]);
+  const [categoryFilter, setCategoryFilter] = useState('');
 
   useEffect(() => {
-    const fetchApi = async () => {
-      if (history.location.pathname === '/drinks') {
-        const data = await fetchApiCockTail(radioValueD, searchInputValueD);
-
-        if (data) {
-          if (data.drinks === null) {
-            return global
-              .alert('Sorry, we haven\'t found any recipes for these filters.');
-          }
-
-          const { idDrink } = data.drinks.find((item) => item.idDrink);
-
-          setDrinksSelected(data);
-          setDrinksSelectedLength(data.drinks.length);
-
-          if (data.drinks.length === 1) {
-            history.push(`/drinks/${idDrink}`);
-          }
-        }
+    const fetch = async () => {
+      const responseCategories = await fetchDrinksCategories();
+      setDrinkCategories(responseCategories);
+      if (categoryFilter === '') {
+        const response = await fetchDrinks();
+        setDrinks(response);
+        return;
       }
-      setOk(!ok);
+      const response = await fetchDrinksByCategory(categoryFilter);
+      setDrinks(response);
     };
-
-    fetchApi();
-  }, [clickOkD]);
+    fetch();
+  }, [categoryFilter]);
 
   const contextValue = useMemo(() => ({
-    drinks,
-    setDrinks,
-    drinksSelected,
-    setClickOkD,
-    setRadioValueD,
-    clickOkD,
-    setSearchInputValueD,
-    drinksSelectedLength,
-  }), [ok]);
+    recipes: drinks,
+    categories: drinkCategories,
+    categoryFilter,
+    setCategoryFilter,
+  }), [drinks, drinkCategories, categoryFilter]);
 
   return (
     <DrinksContext.Provider value={ contextValue }>
