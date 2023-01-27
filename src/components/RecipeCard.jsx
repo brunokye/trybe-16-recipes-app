@@ -1,54 +1,22 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import '../styles/RecipeCard.css';
-
-export default function RecipeCard({ recipe, index, id, basePath }) {
-  const { strMeal, strDrink, strMealThumb, strDrinkThumb } = recipe;
-
-  return (
-    <Link
-      to={ `${basePath}/${id}` }
-    >
-      <div className="card" data-testid={ `${index}-recipe-card` }>
-        <img
-          data-testid={ `${index}-card-img` }
-          src={ strMealThumb || strDrinkThumb }
-          alt="recipe"
-          className="cardImg"
-        />
-        <h3 data-testid={ `${index}-card-name` }>{strMeal || strDrink}</h3>
-      </div>
-    </Link>
-  );
-}
-
-RecipeCard.propTypes = {
-  recipe: PropTypes.shape({
-    strMeal: PropTypes.string,
-    strDrink: PropTypes.string,
-    strMealThumb: PropTypes.string,
-    strDrinkThumb: PropTypes.string,
-  }).isRequired,
-  index: PropTypes.number.isRequired,
-  id: PropTypes.string.isRequired,
-  basePath: PropTypes.string.isRequired,
-};
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { require } from 'clipboard-copy';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import shareIcon from '../images/shareIcon.svg';
 
+import '../styles/RecipeCard.css';
+
 export default function RecipeCard({
   recipeId, title, index, image, name, category,
-  doneDate, tags, nationality, type, alcoholicOrNot }) {
+  doneDate, tags, nationality, type, alcoholicOrNot,
+  recipe, id, basePath }) {
   const [copyLink, setCopyLink] = useState(false);
-  const copy = require('clipboard-copy');
 
-  const copyToClipboard = (id) => {
-    copy(`http://localhost:3000/${type}s/${id}`);
+  const copyToClipboard = (idParm) => {
+    const copy = require('clipboard-copy');
+    const url = `http://localhost:3000/${type}s/${idParm}`;
+    copy(url);
     setCopyLink(true);
   };
 
@@ -65,6 +33,7 @@ export default function RecipeCard({
                       src={ image }
                       alt="Foto da receita"
                       data-testid={ `${index}-horizontal-image` }
+                      className="cardImg"
                     />
                   </Link>
                 </div>
@@ -120,6 +89,7 @@ export default function RecipeCard({
                       src={ image }
                       alt="Foto da receita"
                       data-testid={ `${index}-horizontal-image` }
+                      className="cardImg"
                     />
                   </Link>
                 </div>
@@ -181,10 +151,51 @@ export default function RecipeCard({
           </div>
         )
       }
+      {
+        title === ('Meals' || 'Drinks') && (
+          <div>
+            <Link
+              to={ `${basePath}/${id}` }
+            >
+              <div className="card" data-testid={ `${index}-recipe-card` }>
+                <img
+                  data-testid={ `${index}-card-img` }
+                  src={ recipe.strMealThumb || recipe.strDrinkThumb }
+                  alt="recipe"
+                  className="cardImg"
+                />
+                <h3 data-testid={ `${index}-card-name` }>
+                  {recipe.strMeal
+                  || recipe.strDrink}
+
+                </h3>
+              </div>
+            </Link>
+          </div>
+        )
+      }
     </section>
   );
 }
 
 RecipeCard.propTypes = {
   title: PropTypes.string,
+  recipe: PropTypes.shape({
+    strMeal: PropTypes.string,
+    strDrink: PropTypes.string,
+    strMealThumb: PropTypes.string,
+    strDrinkThumb: PropTypes.string,
+  }),
+  index: PropTypes.number,
+  id: PropTypes.string,
+  basePath: PropTypes.string,
+  recipeId: PropTypes.string,
+  image: PropTypes.string,
+  name: PropTypes.string,
+  category: PropTypes.string,
+  doneDate: PropTypes.string,
+  nationality: PropTypes.string,
+  type: PropTypes.string,
+  alcoholicOrNot: PropTypes.string,
+  tags: PropTypes.array,
 }.isRequired;
