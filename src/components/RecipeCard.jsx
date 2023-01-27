@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { require } from 'clipboard-copy';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import shareIcon from '../images/shareIcon.svg';
 
@@ -21,94 +21,111 @@ export default function RecipeCard({
       {
         title === 'Done Recipes' && (
           <div title="card">
-            <div id="image">
-              <Link to={ `http://localhost:3000/${type}s/${id}` }>
-                <img
-                  src={ image }
-                  alt="Foto da receita"
-                  data-testid={ `${index}-horizontal-image` }
-                />
-              </Link>
-            </div>
             { type === 'meal' && (
-              <div id="meals-data">
-                <div>
-                  <h4
-                    data-testid={ `${index}-horizontal-name` }
-                  >
-                    { name }
-                  </h4>
-                  <h6
-                    data-testid={ `${index}-horizontal-top-text` }
-                  >
-                    <span>{ nationality }</span>
-                    {' - '}
-                    <span
+              <div name="AllMeal">
+                <div name="image">
+                  <Link to={ `/${type}s/${recipeId}` }>
+                    <img
+                      src={ image }
+                      alt="Foto da receita"
+                      data-testid={ `${index}-horizontal-image` }
+                    />
+                  </Link>
+                </div>
+                <div name="meals-data">
+                  <div>
+                    <Link to={ `/${type}s/${recipeId}` }>
+                      <h4
+                        data-testid={ `${index}-horizontal-name` }
+                      >
+                        { name }
+                      </h4>
+                    </Link>
+                    <h6
                       data-testid={ `${index}-horizontal-top-text` }
                     >
-                      { category }
+                      <span>{ nationality }</span>
+                      {' - '}
+                      <span
+                        data-testid={ `${index}-horizontal-top-text` }
+                      >
+                        { category }
+                      </span>
+                    </h6>
+                  </div>
+                  <p>
+                    <span>Sone in:</span>
+                    <span data-testid={ `${index}-horizontal-done-date` }>
+                      { doneDate }
                     </span>
-                  </h6>
-                </div>
-                <p>
-                  <span>Sone in:</span>
-                  <span data-testid={ `${index}-horizontal-done-date` }>
-                    { doneDate }
-                  </span>
-                </p>
-                <div>
-                  {
-                    tags
-                      .map((tag) => (
-                        <button
-                          type="button"
-                          key={ tag }
-                          data-testid={ `${index}-${tag}-horizontal-tag` }
-                        >
-                          { tag }
-                        </button>
-                      ))
-                  }
+                  </p>
+                  <div>
+                    {
+                      tags
+                        .map((tag) => (
+                          <button
+                            type="button"
+                            key={ tag }
+                            data-testid={ `${index}-${tag}-horizontal-tag` }
+                          >
+                            { tag }
+                          </button>
+                        ))
+                    }
+                  </div>
                 </div>
               </div>
             ) }
             { type === 'drink' && (
-              <div id="meals-data">
-                <div>
-                  <h4
-                    data-testid={ `${index}-horizontal-name` }
-                  >
-                    { name }
-                  </h4>
-                  <h6
-                    data-testid={ `${index}-horizontal-top-text` }
-                  >
-                    <span>{ alcoholicOrNot }</span>
-                  </h6>
+              <div name="allDrink">
+                <div name="image">
+                  <Link to={ `/${type}s/${recipeId}` }>
+                    <img
+                      src={ image }
+                      alt="Foto da receita"
+                      data-testid={ `${index}-horizontal-image` }
+                    />
+                  </Link>
                 </div>
-                <p>
-                  <span>Sone in:</span>
-                  <span data-testid={ `${index}-horizontal-done-date` }>
-                    { doneDate }
-                  </span>
-                </p>
-                <div>
-                  {
-                    tags
-                      .map((tag) => (
-                        <button
-                          type="button"
-                          key={ tag }
-                          data-testid={ `${index}-${tag}-horizontal-tag` }
-                        >
-                          { tag }
-                        </button>
-                      ))
-                  }
+                <div name="drink-data">
+                  <div>
+                    <Link to={ `/${type}s/${recipeId}` }>
+                      <h4
+                        data-testid={ `${index}-horizontal-name` }
+                      >
+                        { name }
+                      </h4>
+                    </Link>
+                    <h6
+                      data-testid={ `${index}-horizontal-top-text` }
+                    >
+                      <span>{ alcoholicOrNot }</span>
+                    </h6>
+                  </div>
+                  <p>
+                    <span>Sone in:</span>
+                    <span data-testid={ `${index}-horizontal-done-date` }>
+                      { doneDate }
+                    </span>
+                  </p>
+                  <div>
+                    {
+                      tags
+                        .map((tag) => (
+                          <button
+                            type="button"
+                            key={ tag }
+                            data-testid={ `${index}-${tag}-horizontal-tag` }
+                          >
+                            { tag }
+                          </button>
+                        ))
+                    }
+                  </div>
                 </div>
               </div>
             ) }
-            <div id="share">
+            <div name="share">
               <button
                 type="button"
                 onClick={ () => copyToClipboard(recipeId) }
