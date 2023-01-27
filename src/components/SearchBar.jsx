@@ -36,7 +36,7 @@ export default function SearchBar() {
             data-testid="ingredient-search-radio"
             id="ingredient"
             name="radio"
-            selected={ radio === 'ingredient' }
+            defaultChecked={ radio === 'ingredient' }
             onClick={ () => setRadio('ingredient') }
           />
         </label>
@@ -49,7 +49,7 @@ export default function SearchBar() {
             data-testid="name-search-radio"
             id="name"
             name="radio"
-            selected={ radio === 'name' }
+            defaultChecked={ radio === 'name' }
             onClick={ () => setRadio('name') }
           />
         </label>
@@ -62,7 +62,7 @@ export default function SearchBar() {
             data-testid="first-letter-search-radio"
             id="first-letter"
             name="radio"
-            selected={ radio === 'first-letter' }
+            defaultChecked={ radio === 'first-letter' }
             onClick={ () => setRadio('first-letter') }
           />
         </label>
