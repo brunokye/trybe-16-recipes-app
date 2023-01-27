@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { require } from 'clipboard-copy';
+import { Link } from 'react-router-dom';
 
 import shareIcon from '../images/shareIcon.svg';
 
@@ -21,11 +22,13 @@ export default function RecipeCard({
         title === 'Done Recipes' && (
           <div title="card">
             <div id="image">
-              <img
-                src={ image }
-                alt="Foto da receita"
-                data-testid={ `${index}-horizontal-image` }
-              />
+              <Link to={ `http://localhost:3000/${type}s/${id}` }>
+                <img
+                  src={ image }
+                  alt="Foto da receita"
+                  data-testid={ `${index}-horizontal-image` }
+                />
+              </Link>
             </div>
             { type === 'meal' && (
               <div id="meals-data">
