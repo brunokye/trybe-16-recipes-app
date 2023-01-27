@@ -41,7 +41,7 @@ describe('Tela de Principal de Receitas', () => {
     await act(async () => renderWithRouterAndProviders(<Recipes />, { initialEntries: ['/meals'] }));
 
     const mealCategories = await screen.findAllByTestId(/^.*-category-filter$/i);
-    expect(mealCategories).toHaveLength(5);
+    expect(mealCategories).toHaveLength(6);
   });
 
   it('Verfica se ao estar na tela de receitas com o pathname = "/drinks", são renderizados 12 cards de receitas de bebidas.', async () => {
@@ -55,7 +55,7 @@ describe('Tela de Principal de Receitas', () => {
     await act(async () => renderWithRouterAndProviders(<Recipes />, { initialEntries: ['/drinks'] }));
 
     const drinkCategories = await screen.findAllByTestId(/^.*-category-filter$/i);
-    expect(drinkCategories).toHaveLength(5);
+    expect(drinkCategories).toHaveLength(6);
   });
 
   it('', () => {});
