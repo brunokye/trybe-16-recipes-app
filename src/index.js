@@ -5,6 +5,7 @@ import DrinksProvider from './context/DrinksProvider';
 import FoodProvider from './context/FoodProvider';
 import './styles/index.css';
 import App from './App';
+
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM

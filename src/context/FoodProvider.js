@@ -1,38 +1,59 @@
 import PropTypes from 'prop-types';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import FoodContext from './FoodContext';
 import {
   fetchMeals,
   fetchMealsCategories,
   fetchMealsByCategory,
+  fetchByType,
 } from '../services/mealAPI';
 
 function FoodProvider({ children }) {
-  const [foods, setFoods] = useState([]);
-  const [foodCategories, setFoodCategories] = useState([]);
+  const [recipes, setRecipes] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [categoryFilter, setCategoryFilter] = useState('');
+  const [searchInput, setSearchInput] = useState('');
+  const [searchType, setSearchType] = useState('ingredient');
 
   useEffect(() => {
-    const fetch = async () => {
-      const responseCategories = await fetchMealsCategories();
-      setFoodCategories(responseCategories);
-      if (categoryFilter === '') {
-        const response = await fetchMeals();
-        setFoods(response);
+    const fetchDefault = async () => {
+      const response = await fetchMeals();
+      setRecipes(response);
+    };
+
+    const fetchList = async () => {
+      if (categoryFilter !== '') {
+        const response = await fetchMealsByCategory(categoryFilter);
+        setRecipes(response);
         return;
       }
-      const response = await fetchMealsByCategory(categoryFilter);
-      setFoods(response);
+      if (searchInput !== '') {
+        const response = await fetchByType(searchType, searchInput);
+        setRecipes(response);
+        return;
+      }
+      await fetchDefault();
+    };
+
+    const fetch = async () => {
+      const responseCategories = await fetchMealsCategories();
+      setCategories(responseCategories);
+
+      await fetchList();
     };
     fetch();
-  }, [categoryFilter]);
+  }, [categoryFilter, searchInput, searchType]);
 
   const contextValue = useMemo(() => ({
-    recipes: foods,
-    categories: foodCategories,
+    recipes,
+    categories,
     categoryFilter,
+    searchInput,
+    searchType,
     setCategoryFilter,
-  }), [foods, foodCategories, categoryFilter]);
+    setSearchInput,
+    setSearchType,
+  }), [recipes, categories, categoryFilter, searchInput, searchType]);
 
   return (
     <FoodContext.Provider value={ contextValue }>

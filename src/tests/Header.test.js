@@ -41,12 +41,13 @@ describe('Verifica o componente Header:', () => {
     await act(async () => renderWithRouterAndProviders(<Recipes />, { initialEntries: ['/drinks'] }));
 
     const search = screen.getByRole('img', { name: /search/i });
-    userEvent.click(search);
+    await act(async () => userEvent.click(search));
 
     const searchBar = screen.getByRole('textbox');
     expect(searchBar).toBeInTheDocument();
 
-    userEvent.click(search);
+    await act(async () => userEvent.click(search));
+
     const hiddenElement = screen.queryByRole('textbox');
     expect(hiddenElement).not.toBeInTheDocument();
   });

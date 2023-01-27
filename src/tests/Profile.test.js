@@ -1,7 +1,9 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { act } from 'react-dom/test-utils';
+
 import Profile from '../pages/Profile';
-import { renderWithRouter } from './helpers/renderWith';
+import { renderWithRouterAndProviders } from './helpers/renderWith';
 
 const setLocalStorage = (key, data) => {
   window.localStorage.setItem(key, JSON.stringify(data));
@@ -12,8 +14,8 @@ describe('Verifica a Tela de Profile:', () => {
     window.localStorage.clear();
   });
 
-  it('Testa os elementos da tela.', () => {
-    renderWithRouter(<Profile />);
+  it('Testa os elementos da tela.', async () => {
+    await act(async () => renderWithRouterAndProviders(<Profile />, { initialEntries: ['/profile'] }));
 
     const userEmail = 'email';
     const userData = 'teste@gmail.com';
@@ -30,15 +32,15 @@ describe('Verifica a Tela de Profile:', () => {
     expect(logout).toBeInTheDocument();
   });
 
-  it('Testa o botão Logout.', () => {
-    renderWithRouter(<Profile />);
+  it('Testa o botão Logout.', async () => {
+    await act(async () => renderWithRouterAndProviders(<Profile />, { initialEntries: ['/profile'] }));
 
     const userEmail = 'email';
     const userData = 'teste@gmail.com';
     setLocalStorage(userEmail, userData);
 
     const logout = screen.getByRole('button', { name: /logout/i });
-    userEvent.click(logout);
+    await act(async () => userEvent.click(logout));
     window.localStorage.clear();
 
     expect(Object.entries(window.localStorage)).toHaveLength(0);
