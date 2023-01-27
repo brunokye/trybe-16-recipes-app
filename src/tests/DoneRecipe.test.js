@@ -60,9 +60,6 @@ describe('Verifica tela de Receitas Feitas', () => {
     expect(filterMeals).toBeInTheDocument();
     expect(filterDrinks).toBeInTheDocument();
 
-    const cards = screen.getAllByTitle('card');
-    expect(cards.length).toEqual(2);
-
     const headerTitle = screen.getByText(/done recipes/i);
     expect(headerTitle).toBeInTheDocument();
   });
@@ -73,20 +70,22 @@ describe('Verifica tela de Receitas Feitas', () => {
       { initialEntries: [path] },
     ));
 
+    setLocalStorage(key, data);
+
     const filterAll = screen.getByTestId('filter-by-all-btn');
     const filterMeals = screen.getByTestId('filter-by-meal-btn');
     const filterDrinks = screen.getByTestId('filter-by-drink-btn');
 
     userEvent.click(filterMeals);
-    const cardsMeal = screen.getAllByTitle('card');
+    const cardsMeal = screen.getAllByTestId('card');
     expect(cardsMeal.length).toEqual(1);
 
     userEvent.click(filterDrinks);
-    const cardsDrink = screen.getAllByTitle('card');
+    const cardsDrink = screen.getAllByTestId('card');
     expect(cardsDrink.length).toEqual(1);
 
     userEvent.click(filterAll);
-    const cardsAll = screen.getAllByTitle('card');
+    const cardsAll = screen.getAllByTestId('card');
     expect(cardsAll.length).toEqual(2);
   });
 

@@ -24,9 +24,9 @@ export default function RecipeCard({
     <section>
       {
         title === 'Done Recipes' && (
-          <div title="card">
+          <div title="card" name="card">
             { type === 'meal' && (
-              <div name="AllMeal">
+              <div data-testid="card" name="AllMeal">
                 <div name="image">
                   <Link to={ `/${type}s/${recipeId}` }>
                     <img
@@ -59,7 +59,7 @@ export default function RecipeCard({
                     </h6>
                   </div>
                   <p>
-                    <span>Sone in:</span>
+                    <span>Done in:</span>
                     <span data-testid={ `${index}-horizontal-done-date` }>
                       { doneDate }
                     </span>
@@ -82,7 +82,7 @@ export default function RecipeCard({
               </div>
             ) }
             { type === 'drink' && (
-              <div name="allDrink">
+              <div data-testid="card" name="allDrink">
                 <div name="image">
                   <Link to={ `/${type}s/${recipeId}` }>
                     <img
