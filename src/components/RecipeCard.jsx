@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { require } from 'clipboard-copy';
 
 import shareIcon from '../images/shareIcon.svg';
 
 export default function RecipeCard({
   recipeId, title, index, image, name, category,
   doneDate, tags, nationality, type, alcoholicOrNot }) {
-  console.log(title);
+  const [copyLink, setCopyLink] = useState(false);
+  const copy = require('clipboard-copy');
+
+  const copyToClipboard = (id) => {
+    copy(`http://localhost:3000/${type}s/${id}`);
+    setCopyLink(true);
+  };
+
   return (
     <section>
       {
@@ -99,7 +106,10 @@ export default function RecipeCard({
               </div>
             ) }
             <div id="share">
-              <Link to={ `/${category}/${recipeId}` }>
+              <button
+                type="button"
+                onClick={ () => copyToClipboard(recipeId) }
+              >
                 <img
                   src={ shareIcon }
                   alt="Ícone para compartilhar receita."
@@ -107,7 +117,10 @@ export default function RecipeCard({
                   width="20"
                   height="20"
                 />
-              </Link>
+              </button>
+              { copyLink && (
+                <span>Link copied!</span>
+              ) }
             </div>
           </div>
         )
