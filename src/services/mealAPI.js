@@ -11,3 +11,9 @@ export const fetchMealsCategories = async () => {
   const { meals } = await response.json();
   return meals;
 };
+
+export const fetchMealsByCategory = async (category) => {
+  const response = await fetch(`${baseUrl}filter.php?c=${category}`);
+  const { meals } = await response.json();
+  return meals;
+};

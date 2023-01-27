@@ -11,3 +11,9 @@ export const fetchDrinksCategories = async () => {
   const { drinks } = await response.json();
   return drinks;
 };
+
+export const fetchDrinksByCategory = async (category) => {
+  const response = await fetch(`${baseUrl}filter.php?c=${category}`);
+  const { drinks } = await response.json();
+  return drinks;
+};

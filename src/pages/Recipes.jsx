@@ -12,7 +12,7 @@ export default function Recipes() {
   const pathname = location.pathname === '/meals' ? 'Meals' : 'Drinks';
   const isFood = pathname === 'Meals';
   const context = isFood ? FoodContext : DrinksContext;
-  const { recipes, categories } = useContext(context);
+  const { recipes, categories, setCategoryFilter } = useContext(context);
   const idField = isFood ? 'idMeal' : 'idDrink';
 
   const pageSize = 12;
@@ -31,10 +31,18 @@ export default function Recipes() {
             type="button"
             data-testid={ `${category.strCategory}-category-filter` }
             key={ category.strCategory }
+            onClick={ () => setCategoryFilter(category.strCategory) }
           >
             { category.strCategory }
           </button>
         ))}
+        <button
+          type="button"
+          data-testid="All-category-filter"
+          onClick={ () => setCategoryFilter('') }
+        >
+          All
+        </button>
       </div>
       <div className="card-container">
         { recipes.slice(0, pageSize).map((recipe, index) => (
