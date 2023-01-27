@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { readObject, saveObject } from '../helpers/localStorage';
 
@@ -10,11 +10,16 @@ function RecipeInProgress() {
 
   const localStorageGet = readObject('inProgressRecipes') || [];
 
-  const [meals, setMeals] = React.useState([]);
-  const [drinks, setDrinks] = React.useState([]);
-  const [checked, setChecked] = React.useState(localStorageGet);
+  const [meals, setMeals] = useState([]);
+  const [drinks, setDrinks] = useState([]);
+  const [checked, setChecked] = useState(localStorageGet);
+  const [isDisabled, setIsDisabled] = useState(true);
 
   const drinkORmeal = pathArray[1];
+
+  const maxIngredientsMeals = 20;
+  const maxIngredientsDrinks = 15;
+  const ingredients = [];
 
   useEffect(() => {
     if (pathArray[1] === 'meals') {
@@ -38,15 +43,20 @@ function RecipeInProgress() {
     }
   }, [id]);
 
+  const checkDisabledBtn = () => {
+    if (checked.length === ingredients.length) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  };
+
   useEffect(() => {
     saveObject('inProgressRecipes', checked);
+    checkDisabledBtn();
   }, [checked]);
 
-  const maxIngredientsMeals = 20;
-  const maxIngredientsDrinks = 15;
-
   const callIngredients = (string) => {
-    const ingredients = [];
     const maxIngredient = string === 'meals' ? maxIngredientsMeals : maxIngredientsDrinks;
     const variable = string === 'meals' ? meals : drinks;
 
@@ -93,7 +103,6 @@ function RecipeInProgress() {
         );
       }
     }
-
     return ingredients;
   };
 
@@ -124,6 +133,7 @@ function RecipeInProgress() {
             <button
               type="button"
               data-testid="finish-recipe-btn"
+              disabled={ isDisabled }
             >
               Finish Recipe
             </button>
@@ -163,6 +173,7 @@ function RecipeInProgress() {
             <button
               type="button"
               data-testid="finish-recipe-btn"
+              disabled={ isDisabled }
             >
               Finish Recipe
             </button>
