@@ -54,6 +54,8 @@ export default function Recipes() {
             key={ recipe[idField] }
             recipe={ recipe }
             index={ index }
+            id={ recipe[idField] }
+            basePath={ isFood ? '/meals' : '/drinks' }
           />
         ))}
       </div>
