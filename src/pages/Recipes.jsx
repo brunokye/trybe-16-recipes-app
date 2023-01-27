@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 
 import Footer from '../components/Footer';
 import FoodContext from '../context/FoodContext';
@@ -11,14 +11,27 @@ import '../styles/Recipes.css';
 
 export default function Recipes() {
   const location = useLocation();
+  const history = useHistory();
   const pathname = location.pathname === '/meals' ? 'Meals' : 'Drinks';
   const isFood = pathname === 'Meals';
   const context = isFood ? FoodContext : DrinksContext;
-  const { recipes, categories, setCategoryFilter, categoryFilter } = useContext(context);
+  const {
+    recipes,
+    categories,
+    setCategoryFilter,
+    categoryFilter,
+  } = useContext(context);
   const idField = isFood ? 'idMeal' : 'idDrink';
 
+  if (recipes.length === 1) {
+    const [recipe] = recipes;
+    const { [idField]: id } = recipe;
+    history.push(`/${pathname.toLowerCase()}/${id}`);
+    return;
+  }
+
   const pageSize = 12;
-  const categorieSize = 5;
+  const categorySize = 5;
 
   return (
     <div>
@@ -28,7 +41,7 @@ export default function Recipes() {
       />
       <h1>Recipes</h1>
       <div className="categories-container">
-        { categories.slice(0, categorieSize).map((category) => (
+        { categories.slice(0, categorySize).map((category) => (
           <button
             type="button"
             data-testid={ `${category.strCategory}-category-filter` }

@@ -5,34 +5,55 @@ import {
   fetchDrinks,
   fetchDrinksCategories,
   fetchDrinksByCategory,
+  fetchByType,
 } from '../services/cockTailAPI';
 
 function DrinksProvider({ children }) {
-  const [drinks, setDrinks] = useState([]);
-  const [drinkCategories, setDrinkCategories] = useState([]);
+  const [recipes, setRecipes] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [categoryFilter, setCategoryFilter] = useState('');
+  const [searchInput, setSearchInput] = useState('');
+  const [searchType, setSearchType] = useState('ingredient');
 
   useEffect(() => {
-    const fetch = async () => {
-      const responseCategories = await fetchDrinksCategories();
-      setDrinkCategories(responseCategories);
-      if (categoryFilter === '') {
-        const response = await fetchDrinks();
-        setDrinks(response);
+    const fetchDefault = async () => {
+      const response = await fetchDrinks();
+      setRecipes(response);
+    };
+
+    const fetchList = async () => {
+      if (categoryFilter !== '') {
+        const response = await fetchDrinksByCategory(categoryFilter);
+        setRecipes(response);
         return;
       }
-      const response = await fetchDrinksByCategory(categoryFilter);
-      setDrinks(response);
+      if (searchInput !== '') {
+        const response = await fetchByType(searchType, searchInput);
+        setRecipes(response);
+        return;
+      }
+      await fetchDefault();
+    };
+
+    const fetch = async () => {
+      const responseCategories = await fetchDrinksCategories();
+      setCategories(responseCategories);
+
+      await fetchList();
     };
     fetch();
-  }, [categoryFilter]);
+  }, [categoryFilter, searchInput, searchType]);
 
   const contextValue = useMemo(() => ({
-    recipes: drinks,
-    categories: drinkCategories,
+    recipes,
+    categories,
     categoryFilter,
+    searchInput,
+    searchType,
     setCategoryFilter,
-  }), [drinks, drinkCategories, categoryFilter]);
+    setSearchInput,
+    setSearchType,
+  }), [recipes, categories, categoryFilter, searchInput, searchType]);
 
   return (
     <DrinksContext.Provider value={ contextValue }>

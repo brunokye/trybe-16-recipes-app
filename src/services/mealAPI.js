@@ -1,62 +1,44 @@
+import { parseJSONResponse } from '../helpers';
+
 const baseUrl = 'https://www.themealdb.com/api/json/v1/1/';
 
+const messages = {
+  notFound: 'Sorry, we haven\'t found any recipes for these filters.',
+  invalidSearchInput: 'Your search must have only 1 (one) character',
+};
+
 export const fetchByIngredient = async (searchInput) => {
-  try {
-    const URL = `${baseUrl}filter.php?i=${searchInput}`;
+  const response = await fetch(`${baseUrl}filter.php?i=${searchInput}`);
 
-    const response = await fetch(URL);
-
-    if (!response.ok) {
-      const newError = await response.json();
-      throw newError.message;
-    }
-
-    const data = await response.json();
-
-    console.log(data);
-
-    return data;
-  } catch (error) {
-    console.log(error);
+  const { meals } = await parseJSONResponse(response, []);
+  if (!meals || meals.length === 0) {
+    global.alert(messages.notFound);
   }
+  return meals || [];
 };
 
 export const fetchByName = async (searchInput) => {
-  const URL = `${baseUrl}search.php?s=${searchInput}`;
+  const response = await fetch(`${baseUrl}search.php?s=${searchInput}`);
 
-  const response = await fetch(URL);
-
-  if (!response.ok) {
-    const newError = await response.json();
-    throw newError.message;
+  const { meals } = await parseJSONResponse(response, []);
+  if (!meals || meals.length === 0) {
+    global.alert(messages.notFound);
   }
-
-  const data = await response.json();
-
-  return data;
+  return meals || [];
 };
 
 export const fetchByFirstLetter = async (searchInput) => {
-  try {
-    const URL = `${baseUrl}search.php?f=${searchInput}`;
+  const response = await fetch(`${baseUrl}search.php?f=${searchInput}`);
 
-    const response = await fetch(URL);
-
-    if (!response.ok) {
-      const newError = await response.json();
-      throw newError.message;
-    }
-
-    const data = await response.json();
-
-    return data;
-  } catch (error) {
-    console.log(error);
+  const { meals } = await parseJSONResponse(response, []);
+  if (!meals || meals.length === 0) {
+    global.alert(messages.notFound);
   }
+  return meals || [];
 };
 
-export const fetchApiMeals = async (selected, searchInput) => {
-  switch (selected) {
+export const fetchByType = async (searchType, searchInput) => {
+  switch (searchType) {
   case 'ingredient':
     return fetchByIngredient(searchInput);
 
@@ -64,8 +46,9 @@ export const fetchApiMeals = async (selected, searchInput) => {
     return fetchByName(searchInput);
 
   case 'first-letter':
-    if (selected.length > 1) {
-      global.alert('Your search must have only 1 (one) character');
+    if (searchInput.length > 1) {
+      global.alert(messages.invalidSearchInput);
+      return [];
     }
     return fetchByFirstLetter(searchInput);
 

@@ -1,75 +1,56 @@
+import { parseJSONResponse } from '../helpers';
+
 const baseUrl = 'https://www.thecocktaildb.com/api/json/v1/1/';
 
+const messages = {
+  notFound: 'Sorry, we haven\'t found any recipes for these filters.',
+  invalidSearchInput: 'Your search must have only 1 (one) character',
+};
+
 export const fetchByIngredient = async (searchInput) => {
-  try {
-    const URL = `${baseUrl}filter.php?i=${searchInput}`;
-    const response = await fetch(URL);
+  const response = await fetch(`${baseUrl}filter.php?i=${searchInput}`);
 
-    if (!response.ok) {
-      const newError = await response.json();
-      throw newError.message;
-    }
-
-    const data = await response.json();
-
-    return data;
-  } catch (error) {
-    console.log(error);
+  const { drinks } = await parseJSONResponse(response, []);
+  if (!drinks || drinks.length === 0) {
+    global.alert(messages.notFound);
   }
+  return drinks || [];
 };
 
 export const fetchByName = async (searchInput) => {
-  const URL = `${baseUrl}search.php?s=${searchInput}`;
+  const response = await fetch(`${baseUrl}search.php?s=${searchInput}`);
 
-  const response = await fetch(URL);
-
-  if (!response.ok) {
-    const newError = await response.json();
-    throw newError.message;
+  const { drinks } = await parseJSONResponse(response, []);
+  if (!drinks || drinks.length === 0) {
+    global.alert(messages.notFound);
   }
-
-  const data = await response.json();
-
-  return data;
+  return drinks || [];
 };
 
 export const fetchByFirstLetter = async (searchInput) => {
-  try {
-    const URL = `${baseUrl}search.php?f=${searchInput}`;
+  const response = await fetch(`${baseUrl}search.php?f=${searchInput}`);
 
-    const response = await fetch(URL);
-
-    if (!response.ok) {
-      const newError = await response.json();
-      throw newError.message;
-    }
-
-    const data = await response.json();
-
-    return data;
-  } catch (error) {
-    console.log(error);
+  const { drinks } = await parseJSONResponse(response, []);
+  if (!drinks || drinks.length === 0) {
+    global.alert(messages.notFound);
   }
+  return drinks || [];
 };
 
-export const fetchApiCockTail = async (selected, searchInput) => {
-  switch (selected) {
+export const fetchByType = async (searchType, searchInput) => {
+  switch (searchType) {
   case 'ingredient':
     return fetchByIngredient(searchInput);
-    // break;
 
   case 'name':
     return fetchByName(searchInput);
-    // break;
 
   case 'first-letter':
-    if (selected.length > 1) {
-      global.alert('Your search must have only 1 (one) character');
+    if (searchInput.length > 1) {
+      global.alert(messages.invalidSearchInput);
+      return [];
     }
     return fetchByFirstLetter(searchInput);
-
-    // break;
-
   default:
     break;
   }
