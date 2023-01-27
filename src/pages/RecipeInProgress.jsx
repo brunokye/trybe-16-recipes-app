@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { readObject, saveObject } from '../helpers/localStorage';
 
 function RecipeInProgress() {
+  const history = useHistory();
   const { id } = useParams();
   const location = useLocation();
   const path = location.pathname;
@@ -55,6 +56,39 @@ function RecipeInProgress() {
     saveObject('inProgressRecipes', checked);
     checkDisabledBtn();
   }, [checked]);
+
+  const magicNum = {
+    one: -1,
+    three: 3,
+  };
+
+  const handleFinishRecipeBtn = () => {
+    const localStorageLoad = readObject('doneRecipes') || [];
+    const doneRecipes = [...localStorageLoad];
+    const date = new Date();
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    const hour = date.getHours();
+    const m = date.getMinutes();
+    const s = date.getSeconds();
+    const ms = date.getMilliseconds();
+    const doneDate = `${year}-0${month}-${day}T${hour + magicNum.three}:${m}:${s}.${ms}Z`;
+    const doneRecipe = {
+      id: meals.idMeal || drinks.idDrink,
+      type: drinkORmeal.slice(0, magicNum.one),
+      category: meals.strCategory || drinks.strCategory,
+      alcoholicOrNot: drinks.strAlcoholic || '',
+      name: meals.strMeal || drinks.strDrink,
+      image: meals.strMealThumb || drinks.strDrinkThumb,
+      doneDate,
+      nationality: meals.strArea || '',
+      tags: meals.strTags ? meals.strTags.split(',') : [],
+    };
+    doneRecipes.push(doneRecipe);
+    saveObject('doneRecipes', doneRecipes);
+    history.push('/done-recipes');
+  };
 
   const callIngredients = (string) => {
     const maxIngredient = string === 'meals' ? maxIngredientsMeals : maxIngredientsDrinks;
@@ -134,6 +168,7 @@ function RecipeInProgress() {
               type="button"
               data-testid="finish-recipe-btn"
               disabled={ isDisabled }
+              onClick={ handleFinishRecipeBtn }
             >
               Finish Recipe
             </button>
@@ -173,6 +208,7 @@ function RecipeInProgress() {
             <button
               type="button"
               data-testid="finish-recipe-btn"
+              onClick={ handleFinishRecipeBtn }
               disabled={ isDisabled }
             >
               Finish Recipe
