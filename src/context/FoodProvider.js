@@ -1,17 +1,38 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState, useMemo } from 'react';
 import FoodContext from './FoodContext';
+import {
+  fetchMeals,
+  fetchMealsCategories,
+  fetchMealsByCategory,
+} from '../services/mealAPI';
 
 function FoodProvider({ children }) {
-  // TODO: Fetch the data from the API
   const [foods, setFoods] = useState([]);
+  const [foodCategories, setFoodCategories] = useState([]);
+  const [categoryFilter, setCategoryFilter] = useState('');
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const fetch = async () => {
+      const responseCategories = await fetchMealsCategories();
+      setFoodCategories(responseCategories);
+      if (categoryFilter === '') {
+        const response = await fetchMeals();
+        setFoods(response);
+        return;
+      }
+      const response = await fetchMealsByCategory(categoryFilter);
+      setFoods(response);
+    };
+    fetch();
+  }, [categoryFilter]);
 
   const contextValue = useMemo(() => ({
-    foods,
-    setFoods,
-  }), [foods]);
+    recipes: foods,
+    categories: foodCategories,
+    categoryFilter,
+    setCategoryFilter,
+  }), [foods, foodCategories, categoryFilter]);
 
   return (
     <FoodContext.Provider value={ contextValue }>

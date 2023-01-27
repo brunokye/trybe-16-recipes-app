@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-// import DrinksProvider from './context/DrinksProvider';
-// import FoodProvider from './context/FoodProvider';
+import DrinksProvider from './context/DrinksProvider';
+import FoodProvider from './context/FoodProvider';
 import './styles/index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -11,7 +11,11 @@ ReactDOM
   .createRoot(document.getElementById('root'))
   .render(
     <BrowserRouter>
-      <App />
+      <FoodProvider>
+        <DrinksProvider>
+          <App />
+        </DrinksProvider>
+      </FoodProvider>
     </BrowserRouter>,
   );
 
