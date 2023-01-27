@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
+import { readObject, saveObject } from '../helpers/localStorage';
 
 function RecipeInProgress() {
   const { id } = useParams();
@@ -7,8 +8,13 @@ function RecipeInProgress() {
   const path = location.pathname;
   const pathArray = path.split('/');
 
+  const localStorageGet = readObject('inProgressRecipes') || [];
+
   const [meals, setMeals] = React.useState([]);
   const [drinks, setDrinks] = React.useState([]);
+  const [checked, setChecked] = React.useState(localStorageGet);
+
+  const drinkORmeal = pathArray[1];
 
   useEffect(() => {
     if (pathArray[1] === 'meals') {
@@ -32,53 +38,62 @@ function RecipeInProgress() {
     }
   }, [id]);
 
+  useEffect(() => {
+    saveObject('inProgressRecipes', checked);
+  }, [checked]);
+
   const maxIngredientsMeals = 20;
   const maxIngredientsDrinks = 15;
 
-  const callIngredients = () => {
+  const callIngredients = (string) => {
     const ingredients = [];
-    if (pathArray[1] === 'meals') {
-      for (let i = 1; i <= maxIngredientsMeals; i += 1) {
-        if (meals[`strIngredient${i}`]) {
-          ingredients.push(
-            <li
-              key={ i }
-              data-testid={ `${i}-ingredient-name-and-measure` }
+    const maxIngredient = string === 'meals' ? maxIngredientsMeals : maxIngredientsDrinks;
+    const variable = string === 'meals' ? meals : drinks;
+
+    const handleChecked = (event) => {
+      let updatedChecked = [...checked];
+      if (event.target.checked) {
+        updatedChecked = [...checked, event.target.value];
+      } else {
+        updatedChecked.splice(updatedChecked.indexOf(event.target.value), 1);
+      }
+      setChecked(updatedChecked);
+    };
+
+    const isChecked = (ingredient) => (checked
+      .includes(ingredient) ? 'line-through solid rgb(0, 0, 0)' : 'none');
+
+    for (let i = 1; i <= maxIngredient; i += 1) {
+      if (variable[`strIngredient${i}`]) {
+        ingredients.push(
+          <li
+            key={ i }
+            data-testid={ `${i - 1}-ingredient-name-and-measure` }
+          >
+            <label
+              htmlFor={ i }
+              data-testid={ `${i - 1}-ingredient-step` }
+              style={ {
+                textDecoration: isChecked(variable[`strIngredient${i}`]),
+              } }
             >
-              <label htmlFor={ i } data-testid={ `${i}-ingredient-step` }>
-                <input type="checkbox" id={ i } />
-                {meals[`strIngredient${i}`]}
-                {' '}
-                -
-                {' '}
-                {meals[`strMeasure${i}`]}
-              </label>
-            </li>,
-          );
-        }
+              <input
+                type="checkbox"
+                onChange={ handleChecked }
+                checked={ checked.includes(variable[`strIngredient${i}`]) }
+                value={ variable[`strIngredient${i}`] }
+              />
+              {variable[`strIngredient${i}`]}
+              {' '}
+              -
+              {' '}
+              {variable[`strMeasure${i}`]}
+            </label>
+          </li>,
+        );
       }
     }
-    if (pathArray[1] === 'drinks') {
-      for (let i = 1; i <= maxIngredientsDrinks; i += 1) {
-        if (drinks[`strIngredient${i}`]) {
-          ingredients.push(
-            <li
-              key={ i }
-              data-testid={ `${i}-ingredient-name-and-measure` }
-            >
-              <label htmlFor={ i } data-testid={ `${i}-ingredient-step` }>
-                <input type="checkbox" id={ i } />
-                {drinks[`strIngredient${i}`]}
-                {' '}
-                -
-                {' '}
-                {drinks[`strMeasure${i}`]}
-              </label>
-            </li>,
-          );
-        }
-      }
-    }
+
     return ingredients;
   };
 
@@ -94,13 +109,22 @@ function RecipeInProgress() {
             alt={ meals.strMeal }
           />
           <div>
-            <button type="button" data-testid="share-btn">
+            <button
+              type="button"
+              data-testid="share-btn"
+            >
               Share
             </button>
-            <button type="button" data-testid="favorite-btn">
+            <button
+              type="button"
+              data-testid="favorite-btn"
+            >
               Favorite
             </button>
-            <button type="button" data-testid="finish-recipe-btn">
+            <button
+              type="button"
+              data-testid="finish-recipe-btn"
+            >
               Finish Recipe
             </button>
           </div>
@@ -110,11 +134,7 @@ function RecipeInProgress() {
             {meals.strCategory}
           </p>
           <h5>Ingredients:</h5>
-          <ul>
-            {
-              callIngredients()
-            }
-          </ul>
+          <ul>{callIngredients(drinkORmeal)}</ul>
           <h5>Instructions:</h5>
           <p data-testid="instructions">{meals.strInstructions}</p>
         </div>
@@ -128,25 +148,28 @@ function RecipeInProgress() {
             alt={ drinks.strDrink }
           />
           <div>
-            <button type="button" data-testid="share-btn">
+            <button
+              type="button"
+              data-testid="share-btn"
+            >
               Share
             </button>
-            <button type="button" data-testid="favorite-btn">
+            <button
+              type="button"
+              data-testid="favorite-btn"
+            >
               Favorite
             </button>
-            <button type="button" data-testid="finish-recipe-btn">
+            <button
+              type="button"
+              data-testid="finish-recipe-btn"
+            >
               Finish Recipe
             </button>
           </div>
-          <p data-testid="recipe-category">
-            {drinks.strAlcoholic}
-          </p>
+          <p data-testid="recipe-category">{drinks.strAlcoholic}</p>
           <h5>Ingredients:</h5>
-          <ul>
-            {
-              callIngredients()
-            }
-          </ul>
+          <ul>{callIngredients(drinkORmeal)}</ul>
           <h5>Instructions:</h5>
           <p data-testid="instructions">{drinks.strInstructions}</p>
         </div>
