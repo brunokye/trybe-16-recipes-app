@@ -1,9 +1,38 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 // import PropTypes from 'prop-types';
 
-export default function MealDetails({ result }) {
+export default function MealDetails({ result, recipeId }) {
   const [ingredients, setIngredients] = useState([]);
   const { strMealThumb, strMeal, strCategory, strInstructions, strYoutube } = result;
+
+  const mockDone = [{
+    id: '102030',
+    type: 'meal',
+    nationality: 'Italian',
+    category: 'Vegetarian',
+    alcoholicOrNot: '',
+    name: 'Spicy Arrabiata Penne',
+    image: 'https://www.themealdb.com/images/media/meals/ustsqw1468250014.jpg',
+  }];
+
+  const mockInProgress = {
+    drinks: {
+      102030: [''],
+    },
+    meals: {
+      201020: [''],
+    },
+  };
+
+  localStorage.setItem('doneRecipes', JSON.stringify(mockDone));
+  const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
+  const idDone = doneRecipes.some(({ id }) => id === recipeId);
+
+  localStorage.setItem('inProgressRecipes', JSON.stringify(mockInProgress));
+  const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+  const inProgressMeals = Object.keys(inProgressRecipes.meals);
+  const idInProgress = inProgressMeals.includes(recipeId);
 
   useEffect(() => {
     const maxIngredient = 20;
@@ -62,6 +91,18 @@ export default function MealDetails({ result }) {
         title={ strMeal }
         allowFullScreen
       />
+
+      { idDone ? '' : (
+        <Link to={ `/meals/${recipeId}/in-progress` }>
+          <button
+            data-testid="start-recipe-btn"
+            className="start-button"
+            type="button"
+          >
+            { idInProgress ? 'Continue Recipe' : 'Start Recipe'}
+          </button>
+        </Link>
+      )}
     </div>
   );
 }
