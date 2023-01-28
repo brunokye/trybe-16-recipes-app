@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import shareIcon from '../images/shareIcon.svg';
 
-import '../styles/RecipeCard.css';
+import '../styles/recipeCard.css';
 
 export default function RecipeCard({
   recipeId, title, index, image, name, category,

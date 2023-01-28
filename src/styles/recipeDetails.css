@@ -1,0 +1,9 @@
+.recipe-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.img-size {
+  height: 200px;
+  width: 200px;
+}

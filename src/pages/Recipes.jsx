@@ -7,7 +7,7 @@ import DrinksContext from '../context/DrinksContext';
 import RecipeCard from '../components/RecipeCard';
 import Header from '../components/Header';
 
-import '../styles/Recipes.css';
+import '../styles/recipes.css';
 
 export default function Recipes() {
   const location = useLocation();
