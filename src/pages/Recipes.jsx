@@ -66,6 +66,7 @@ export default function Recipes() {
       <div className="card-container">
         { recipes.slice(0, pageSize).map((recipe, index) => (
           <RecipeCard
+            title={ pathname ? 'Meals' : 'Drinks' }
             key={ recipe[idField] }
             recipe={ recipe }
             index={ index }
