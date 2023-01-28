@@ -23,7 +23,7 @@ export default function Recipes() {
   } = useContext(context);
   const idField = isFood ? 'idMeal' : 'idDrink';
 
-  if (recipes.length === 1) {
+  if (recipes.length === 1 && !categoryFilter) {
     const [recipe] = recipes;
     const { [idField]: id } = recipe;
     history.push(`/${pathname.toLowerCase()}/${id}`);
