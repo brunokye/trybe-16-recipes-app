@@ -9,7 +9,7 @@ import Recipes from '../pages/Recipes';
 import Profile from '../pages/Profile';
 import Login from '../pages/Login';
 import DoneRecipes from '../pages/DoneRecipes';
-import Favorites from '../pages/Favorites';
+import FavoriteRecipes from '../pages/FavoriteRecipes';
 
 describe('Testa componente Footer', () => {
   it('Verifica se o componente Footer e os icones existe na tela', () => {
@@ -73,7 +73,7 @@ describe('Testa componente Footer', () => {
   });
 
   it('Verifica se quando página de favoritos é renderizado o componente Footer não é renderizado', () => {
-    renderWithRouter(<Favorites />);
+    renderWithRouter(<FavoriteRecipes />);
 
     const footer = screen.queryByTestId('footer');
     expect(footer).not.toBeInTheDocument();
