@@ -34,8 +34,8 @@ export default function RecipeDetails() {
   return (
     <div>
       { verifyPath
-        ? <MealDetails result={ result[0] } recipeId={ id } />
-        : <DrinkDetails result={ result[0] } recipeId={ id } />}
+        ? <MealDetails result={ result[0] } />
+        : <DrinkDetails result={ result[0] } />}
     </div>
   );
 }

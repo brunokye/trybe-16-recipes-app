@@ -2,15 +2,29 @@ import React, { useEffect, useState } from 'react';
 // import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { require } from 'clipboard-copy';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 import shareIcon from '../images/shareIcon.svg';
-import whiteIcon from '../images/whiteHeartIcon.svg';
-// import blackIcon from '../images/blackHeartIcon.svg';
+import whiteHeart from '../images/whiteHeartIcon.svg';
+import blackHeart from '../images/blackHeartIcon.svg';
 
-export default function MealDetails({ result, recipeId }) {
+export default function MealDetails({ result }) {
   const [ingredients, setIngredients] = useState([]);
   const [copyLink, setCopyLink] = useState(false);
-  const { strMealThumb, strMeal, strCategory, strInstructions, strYoutube } = result;
+  const [favorite, setFavorite] = useState(false);
+  const [favoriteRecipes, setFavoriteRecipes] = useLocalStorage('favoriteRecipes', []);
+  const { idMeal, strMealThumb, strMeal, strArea,
+    strCategory, strInstructions, strYoutube } = result;
+
+  const newRecipe = {
+    id: idMeal,
+    type: 'meal',
+    nationality: strArea,
+    category: strCategory,
+    alcoholicOrNot: '',
+    name: strMeal,
+    image: strMealThumb,
+  };
 
   const mockDone = [{
     id: '102030',
@@ -33,16 +47,19 @@ export default function MealDetails({ result, recipeId }) {
 
   localStorage.setItem('doneRecipes', JSON.stringify(mockDone));
   const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
-  const idDone = doneRecipes.some(({ id }) => id === recipeId);
+  const idDone = doneRecipes.some(({ id }) => id === idMeal);
 
   localStorage.setItem('inProgressRecipes', JSON.stringify(mockInProgress));
   const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
   const inProgressMeals = Object.keys(inProgressRecipes.meals);
-  const idInProgress = inProgressMeals.includes(recipeId);
+  const idInProgress = inProgressMeals.includes(idMeal);
 
   useEffect(() => {
     const maxIngredient = 20;
     const ingredientList = [];
+
+    const verifyRecipe = favoriteRecipes.some((recipes) => recipes.id === newRecipe.id);
+    if (verifyRecipe) setFavorite(true);
 
     if (result) {
       for (let i = 1; i <= maxIngredient; i += 1) {
@@ -67,27 +84,39 @@ export default function MealDetails({ result, recipeId }) {
     setCopyLink(true);
   };
 
+  const favoriteRecipe = () => {
+    if (favorite === false) {
+      setFavoriteRecipes([...favoriteRecipes, newRecipe]);
+      return setFavorite(true);
+    }
+
+    const removeRecipe = favoriteRecipes.filter((recipes) => recipes.id !== newRecipe.id);
+    setFavoriteRecipes([...removeRecipe]);
+    return setFavorite(false);
+  };
+
   if (ingredients.length === 0) return <div>Loading...</div>;
   return (
     <div className="recipe-container">
       <div>
         <button
-          data-testid="share-btn"
           type="button"
-          onClick={ () => copyToClipboard(recipeId) }
+          onClick={ () => copyToClipboard(idMeal) }
         >
           <img
+            data-testid="share-btn"
             src={ shareIcon }
             alt="share"
           />
         </button>
 
         <button
-          data-testid="favorite-btn"
           type="button"
+          onClick={ () => favoriteRecipe() }
         >
           <img
-            src={ whiteIcon }
+            data-testid="favorite-btn"
+            src={ favorite ? blackHeart : whiteHeart }
             alt="share"
           />
         </button>
@@ -135,7 +164,7 @@ export default function MealDetails({ result, recipeId }) {
       />
 
       { idDone ? '' : (
-        <Link to={ `/meals/${recipeId}/in-progress` }>
+        <Link to={ `/meals/${idMeal}/in-progress` }>
           <button
             data-testid="start-recipe-btn"
             className="start-button"
