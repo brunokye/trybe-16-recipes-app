@@ -147,17 +147,15 @@ export default function MealDetails({ result }) {
         allowFullScreen
       />
 
-      { idDone ? '' : (
-        <Link to={ `/meals/${idMeal}/in-progress` }>
-          <button
-            data-testid="start-recipe-btn"
-            className="start-button"
-            type="button"
-          >
-            { idInProgress ? 'Continue Recipe' : 'Start Recipe'}
-          </button>
-        </Link>
-      )}
+      <Link to={ `/meals/${idMeal}/in-progress` }>
+        <button
+          data-testid="start-recipe-btn"
+          className="start-button"
+          type="button"
+        >
+          { idInProgress ? 'Continue Recipe' : 'Start Recipe'}
+        </button>
+      </Link>
     </div>
   );
 }

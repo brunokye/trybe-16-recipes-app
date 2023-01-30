@@ -140,17 +140,16 @@ export default function DrinkDetails({ result }) {
 
       <p data-testid="instructions">{ strInstructions }</p>
 
-      { idDone ? '' : (
-        <Link to={ `/drinks/${idDrink}/in-progress` }>
-          <button
-            data-testid="start-recipe-btn"
-            className="start-button"
-            type="button"
-          >
-            { idInProgress ? 'Continue Recipe' : 'Start Recipe'}
-          </button>
-        </Link>
-      )}
+      <Link to={ `/drinks/${idDrink}/in-progress` }>
+        <button
+          data-testid="start-recipe-btn"
+          className="start-button"
+          type="button"
+        >
+          { idInProgress ? 'Continue Recipe' : 'Start Recipe'}
+        </button>
+      </Link>
+
     </div>
   );
 }
