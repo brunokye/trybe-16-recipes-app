@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 // import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import { require } from 'clipboard-copy';
+
+import shareIcon from '../images/shareIcon.svg';
+import whiteIcon from '../images/whiteHeartIcon.svg';
+// import blackIcon from '../images/blackHeartIcon.svg';
 
 export default function MealDetails({ result, recipeId }) {
   const [ingredients, setIngredients] = useState([]);
+  const [copyLink, setCopyLink] = useState(false);
   const { strMealThumb, strMeal, strCategory, strInstructions, strYoutube } = result;
 
   const mockDone = [{
@@ -54,9 +60,45 @@ export default function MealDetails({ result, recipeId }) {
     setIngredients(ingredientList);
   }, [result]);
 
+  const copyToClipboard = (id) => {
+    const copy = require('clipboard-copy');
+    const url = `http://localhost:3000/meals/${id}`;
+    copy(url);
+    setCopyLink(true);
+  };
+
   if (ingredients.length === 0) return <div>Loading...</div>;
   return (
     <div className="recipe-container">
+      <div>
+        <button
+          data-testid="share-btn"
+          type="button"
+          onClick={ () => copyToClipboard(recipeId) }
+        >
+          <img
+            src={ shareIcon }
+            alt="share"
+          />
+        </button>
+
+        <button
+          data-testid="favorite-btn"
+          type="button"
+        >
+          <img
+            src={ whiteIcon }
+            alt="share"
+          />
+        </button>
+
+        <div>
+          { copyLink && (
+            <span>Link copied!</span>
+          ) }
+        </div>
+      </div>
+
       <img
         data-testid="recipe-photo"
         className="img-size"
