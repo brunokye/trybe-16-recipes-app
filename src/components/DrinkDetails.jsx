@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 // import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { require } from 'clipboard-copy';
+import Carousel from './Carousel';
 import useLocalStorage from '../hooks/useLocalStorage';
 
 import shareIcon from '../images/shareIcon.svg';
@@ -153,6 +154,8 @@ export default function DrinkDetails({ result }) {
       </ul>
 
       <p data-testid="instructions">{ strInstructions }</p>
+
+      <Carousel pathname="drinks" show={ 2 } />
 
       { idDone ? '' : (
         <Link to={ `/drinks/${idDrink}/in-progress` }>
