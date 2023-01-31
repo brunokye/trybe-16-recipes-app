@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 // import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { require } from 'clipboard-copy';
+import Carousel from './Carousel';
 import useLocalStorage from '../hooks/useLocalStorage';
 
 import shareIcon from '../images/shareIcon.svg';
@@ -13,6 +14,8 @@ export default function DrinkDetails({ result }) {
   const [copyLink, setCopyLink] = useState(false);
   const [favorite, setFavorite] = useState(false);
   const [favoriteRecipes, setFavoriteRecipes] = useLocalStorage('favoriteRecipes', []);
+  const history = useHistory();
+
   const { idDrink, strDrinkThumb, strDrink,
     strAlcoholic, strInstructions, strCategory } = result;
 
@@ -26,32 +29,11 @@ export default function DrinkDetails({ result }) {
     image: strDrinkThumb,
   };
 
-  const mockDone = [{
-    id: '201020',
-    type: 'drink',
-    nationality: 'nacionalidade',
-    category: 'categoria',
-    alcoholicOrNot: 'alcoholic',
-    name: 'nome-da-receita',
-    image: 'https://www.thecocktaildb.com/images/media/drink/zvsre31572902738.jpg',
-  }];
-
-  const mockInProgress = {
-    drinks: {
-      102030: [''],
-    },
-    meals: {
-      201020: [''],
-    },
-  };
-
-  localStorage.setItem('doneRecipes', JSON.stringify(mockDone));
   const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
-  const idDone = doneRecipes.some(({ id }) => id === idDrink);
+  const idDone = doneRecipes?.some(({ id }) => id === idDrink);
 
-  localStorage.setItem('inProgressRecipes', JSON.stringify(mockInProgress));
   const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
-  const inProgressDrinks = Object.keys(inProgressRecipes.drinks);
+  const inProgressDrinks = Object.keys(inProgressRecipes?.drinks || {});
   const idInProgress = inProgressDrinks.includes(idDrink);
 
   useEffect(() => {
@@ -94,6 +76,11 @@ export default function DrinkDetails({ result }) {
     setFavoriteRecipes([...removeRecipe]);
     return setFavorite(false);
   };
+
+  if (idDone) {
+    history.push('/done-receipes');
+    return;
+  }
 
   if (ingredients.length === 0) return <div>Loading...</div>;
   return (
@@ -154,17 +141,17 @@ export default function DrinkDetails({ result }) {
 
       <p data-testid="instructions">{ strInstructions }</p>
 
-      { idDone ? '' : (
-        <Link to={ `/drinks/${idDrink}/in-progress` }>
-          <button
-            data-testid="start-recipe-btn"
-            className="start-button"
-            type="button"
-          >
-            { idInProgress ? 'Continue Recipe' : 'Start Recipe'}
-          </button>
-        </Link>
-      )}
+      <Carousel pathname="drinks" show={ 2 } />
+
+      <Link to={ `/drinks/${idDrink}/in-progress` }>
+        <button
+          data-testid="start-recipe-btn"
+          className="start-button"
+          type="button"
+        >
+          { idInProgress ? 'Continue Recipe' : 'Start Recipe'}
+        </button>
+      </Link>
     </div>
   );
 }

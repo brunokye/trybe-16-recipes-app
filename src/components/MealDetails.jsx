@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 // import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { require } from 'clipboard-copy';
+import Carousel from './Carousel';
 import useLocalStorage from '../hooks/useLocalStorage';
 
 import shareIcon from '../images/shareIcon.svg';
@@ -13,6 +14,7 @@ export default function MealDetails({ result }) {
   const [copyLink, setCopyLink] = useState(false);
   const [favorite, setFavorite] = useState(false);
   const [favoriteRecipes, setFavoriteRecipes] = useLocalStorage('favoriteRecipes', []);
+  const history = useHistory();
   const { idMeal, strMealThumb, strMeal, strArea,
     strCategory, strInstructions, strYoutube } = result;
 
@@ -26,32 +28,11 @@ export default function MealDetails({ result }) {
     image: strMealThumb,
   };
 
-  const mockDone = [{
-    id: '102030',
-    type: 'meal',
-    nationality: 'Italian',
-    category: 'Vegetarian',
-    alcoholicOrNot: '',
-    name: 'Spicy Arrabiata Penne',
-    image: 'https://www.themealdb.com/images/media/meals/ustsqw1468250014.jpg',
-  }];
-
-  const mockInProgress = {
-    drinks: {
-      102030: [''],
-    },
-    meals: {
-      201020: [''],
-    },
-  };
-
-  localStorage.setItem('doneRecipes', JSON.stringify(mockDone));
   const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
-  const idDone = doneRecipes.some(({ id }) => id === idMeal);
+  const idDone = doneRecipes?.some(({ id }) => id === idMeal);
 
-  localStorage.setItem('inProgressRecipes', JSON.stringify(mockInProgress));
   const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
-  const inProgressMeals = Object.keys(inProgressRecipes.meals);
+  const inProgressMeals = Object.keys(inProgressRecipes?.meals || {});
   const idInProgress = inProgressMeals.includes(idMeal);
 
   useEffect(() => {
@@ -95,6 +76,10 @@ export default function MealDetails({ result }) {
     return setFavorite(false);
   };
 
+  if (idDone) {
+    history.push('/done-receipes');
+    return;
+  }
   if (ingredients.length === 0) return <div>Loading...</div>;
   return (
     <div className="recipe-container">
@@ -163,17 +148,17 @@ export default function MealDetails({ result }) {
         allowFullScreen
       />
 
-      { idDone ? '' : (
-        <Link to={ `/meals/${idMeal}/in-progress` }>
-          <button
-            data-testid="start-recipe-btn"
-            className="start-button"
-            type="button"
-          >
-            { idInProgress ? 'Continue Recipe' : 'Start Recipe'}
-          </button>
-        </Link>
-      )}
+      <Carousel pathname="meals" show={ 2 } />
+
+      <Link to={ `/meals/${idMeal}/in-progress` }>
+        <button
+          data-testid="start-recipe-btn"
+          className="start-button"
+          type="button"
+        >
+          { idInProgress ? 'Continue Recipe' : 'Start Recipe'}
+        </button>
+      </Link>
     </div>
   );
 }
