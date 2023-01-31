@@ -20,7 +20,7 @@ export default function Recommendations({ recipes, currentIndex }) {
           />
           <span
             data-testid={ `${index}-recommendation-title` }
-            className="text-container"
+            className={ `text-container ${hideAfter < index ? 'hidden' : ''}` }
           >
             {recipe.strMeal || recipe.strDrink }
           </span>
