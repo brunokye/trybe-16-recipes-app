@@ -12,3 +12,5 @@ export * as drinkByNameGGResponse from './drinkByNameGGResponse.json';
 export * as foodByNameBeefResponse from './foodByNameBeefResponse.json';
 export * as drinkByFirstLetterAResponse from './drinkByFirstLetterAResponse.json';
 export * as foodByFirstLetterBResponse from './foodByFirstLetterBResponse.json';
+export * as foodByIDResponse from './foodByIDResponse.json';
+export * as drinksyIDResponse from './drinksByIDResponse.json';
