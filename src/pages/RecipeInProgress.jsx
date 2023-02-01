@@ -190,9 +190,7 @@ function RecipeInProgress() {
             </button>
           </div>
           <p data-testid="recipe-category">
-            Category:
-            {' '}
-            {meals.strCategory}
+            {`Category: ${meals.strCategory}`}
           </p>
           <h5>Ingredients:</h5>
           <ul>{callIngredients(meals, undefined, isChecked, handleChecked)}</ul>
