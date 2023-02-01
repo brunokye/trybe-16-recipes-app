@@ -107,25 +107,49 @@ function RecipeInProgress() {
     history.push('/done-recipes');
   };
 
+  // const handleChecked = (event) => {
+  //   const checkedList = { ...test };
+  //   const findBoolean = Object.entries(checkedList).some((item) => item.id === id);
+  //   const checkValues = findBoolean ? test[typeOfUrl][id] : [];
+  //   if (!findBoolean) {
+  //     console.log({ ...checkValues });
+  //     setTest(
+  //       {
+  //         [typeOfUrl]: {
+  //           ...checkValues,
+  //           [id]: [...checkValues, event.target.value],
+  //         },
+  //       },
+  //     );
+  //   } else {
+
+  //   }
+  // };
   const handleChecked = (event) => {
-    const checkedList = { ...test };
-    const findBoolean = Object.entries(checkedList).some((item) => item.id === id);
+    const findBoolean = Boolean(test[typeOfUrl] && test[typeOfUrl][id]);
+    let set = {};
+    const item = event.target.value;
     if (!findBoolean) {
-      const checkValues = test[typeOfUrl] ? test[typeOfUrl] : [];
-      console.log({ ...checkValues });
-      setTest({
+      set = {
+        ...test,
         [typeOfUrl]: {
-          ...checkValues,
+          ...test[typeOfUrl],
           [id]: [event.target.value],
         },
-      });
+      };
     } else {
-      // const filteredID =  Object.entries(checkedList).filter((item) => item[0] === id);
-      // setTest({
-      //   ...test,
-      //   [typeOfUrl]: {
-      //     [id]:
+      const existsType = test[typeOfUrl] ? test[typeOfUrl] : [];
+      set = {
+        [typeOfUrl]: {
+          ...existsType,
+          [id]: [
+            ...test[typeOfUrl][id],
+            item,
+          ],
+        },
+      };
     }
+    setTest(set);
   };
 
   const isChecked = (ingredient) => {
