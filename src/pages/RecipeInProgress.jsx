@@ -1,55 +1,129 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { require } from 'clipboard-copy';
 import { readObject, saveObject } from '../helpers/localStorage';
+import { fetchByType as fetchMealByID } from '../services/mealAPI';
+import { fetchByType as fetchDrinkByID } from '../services/cockTailAPI';
+import useLocalStorage from '../hooks/useLocalStorage';
+import whiteHeart from '../images/whiteHeartIcon.svg';
+import blackHeart from '../images/blackHeartIcon.svg';
+import {
+  callIngredients,
+  newRecipe as newRecipeHelper,
+} from '../helpers/helpers_recipe_in_progess';
 
 function RecipeInProgress() {
   const history = useHistory();
   const { id } = useParams();
   const location = useLocation();
   const path = location.pathname;
-  const pathArray = path.split('/');
-
-  const localStorageGet = readObject('inProgressRecipes') || [];
-
+  const typeOfUrl = path.split('/')[1];
+  const [checked, setChecked] = useState({});
   const [meals, setMeals] = useState([]);
   const [drinks, setDrinks] = useState([]);
-  const [checked, setChecked] = useState(localStorageGet);
   const [isDisabled, setIsDisabled] = useState(true);
+  const [copyLink, setCopyLink] = useState(false);
+  const [favorite, setFavorite] = useState(false);
+  const [favoriteRecipes, setFavoriteRecipes] = useLocalStorage('favoriteRecipes', []);
 
-  const drinkORmeal = pathArray[1];
-
-  const maxIngredientsMeals = 20;
-  const maxIngredientsDrinks = 15;
-  const ingredients = [];
+  const magicNum = {
+    one: -1,
+    three: 3,
+  };
 
   useEffect(() => {
-    if (pathArray[1] === 'meals') {
+    const localStorageGet = readObject('inProgressRecipes', {});
+    setChecked(localStorageGet);
+  }, []);
+
+  useEffect(() => {
+    if (typeOfUrl === 'meals') {
       const fetchByID = async () => {
-        const response = await fetch(
-          `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`,
-        );
-        const data = await response.json();
-        setMeals(data.meals[0]);
+        fetchMealByID('id', id).then((data) => setMeals(data[0]));
       };
       fetchByID();
     } else {
       const fetchByID = async () => {
-        const response = await fetch(
-          `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`,
-        );
-        const data = await response.json();
-        setDrinks(data.drinks[0]);
+        fetchDrinkByID('id', id).then((data) => setDrinks(data[0]));
       };
       fetchByID();
     }
   }, [id]);
 
-  const checkDisabledBtn = () => {
-    if (checked.length === ingredients.length) {
-      setIsDisabled(false);
+  const newRecipe = newRecipeHelper(meals, drinks, typeOfUrl, magicNum);
+
+  useEffect(() => {
+    const verifyRecipe = favoriteRecipes.some((recipes) => recipes.id === newRecipe.id);
+    if (verifyRecipe) setFavorite(true);
+  }, [meals, drinks]);
+
+  const copyToClipboard = (idParam) => {
+    const copy = require('clipboard-copy');
+    const url = `http://localhost:3000/${typeOfUrl}/${idParam}`;
+    copy(url);
+    setCopyLink(true);
+  };
+
+  const isChecked = (ingredient) => {
+    try {
+      if (checked[typeOfUrl][id]?.includes(ingredient)) {
+        return true;
+      }
+    } catch (error) {
+      return false;
+    }
+  };
+
+  const handleChecked = (event) => {
+    if (!checked[typeOfUrl]) checked[typeOfUrl] = {};
+
+    const ingredient = event.target.value;
+    const checkedList = checked[typeOfUrl][id] || [];
+    if (!isChecked(ingredient)) {
+      setChecked({
+        ...checked,
+        [typeOfUrl]: {
+          ...checked[typeOfUrl],
+          [id]: [...checkedList, ingredient],
+        },
+      });
     } else {
+      setChecked({
+        ...checked,
+        [typeOfUrl]: {
+          ...checked[typeOfUrl],
+          [id]: checkedList.filter((item) => item !== ingredient),
+        },
+      });
+    }
+  };
+
+  const checkDisabledBtn = () => {
+    let ingredients = [];
+    if (typeOfUrl === 'meals') {
+      const callMeals = callIngredients(meals, undefined, isChecked, handleChecked);
+      ingredients = [...callMeals];
+    } else {
+      const callDrinks = callIngredients(undefined, drinks, isChecked, handleChecked);
+      ingredients = [...callDrinks];
+    }
+    try {
+      if (checked[typeOfUrl][id].length === ingredients.length) {
+        setIsDisabled(false);
+      }
+    } catch (error) {
       setIsDisabled(true);
     }
+  };
+  const favoriteRecipe = () => {
+    if (favorite === false) {
+      setFavoriteRecipes([...favoriteRecipes, newRecipe]);
+      return setFavorite(true);
+    }
+
+    const removeRecipe = favoriteRecipes.filter((recipes) => recipes.id !== newRecipe.id);
+    setFavoriteRecipes([...removeRecipe]);
+    return setFavorite(false);
   };
 
   useEffect(() => {
@@ -57,26 +131,14 @@ function RecipeInProgress() {
     checkDisabledBtn();
   }, [checked]);
 
-  const magicNum = {
-    one: -1,
-    three: 3,
-  };
-
   const handleFinishRecipeBtn = () => {
-    const localStorageLoad = readObject('doneRecipes') || [];
+    const localStorageLoad = readObject('doneRecipes', []);
     const doneRecipes = [...localStorageLoad];
     const date = new Date();
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-    const hour = date.getHours();
-    const m = date.getMinutes();
-    const s = date.getSeconds();
-    const ms = date.getMilliseconds();
-    const doneDate = `${year}-0${month}-${day}T${hour + magicNum.three}:${m}:${s}.${ms}Z`;
+    const doneDate = date.toISOString();
     const doneRecipe = {
       id: meals.idMeal || drinks.idDrink,
-      type: drinkORmeal.slice(0, magicNum.one),
+      type: typeOfUrl.slice(0, magicNum.one),
       category: meals.strCategory || drinks.strCategory,
       alcoholicOrNot: drinks.strAlcoholic || '',
       name: meals.strMeal || drinks.strDrink,
@@ -88,56 +150,6 @@ function RecipeInProgress() {
     doneRecipes.push(doneRecipe);
     saveObject('doneRecipes', doneRecipes);
     history.push('/done-recipes');
-  };
-
-  const callIngredients = (string) => {
-    const maxIngredient = string === 'meals' ? maxIngredientsMeals : maxIngredientsDrinks;
-    const variable = string === 'meals' ? meals : drinks;
-
-    const handleChecked = (event) => {
-      let updatedChecked = [...checked];
-      if (event.target.checked) {
-        updatedChecked = [...checked, event.target.value];
-      } else {
-        updatedChecked.splice(updatedChecked.indexOf(event.target.value), 1);
-      }
-      setChecked(updatedChecked);
-    };
-
-    const isChecked = (ingredient) => (checked
-      .includes(ingredient) ? 'line-through solid rgb(0, 0, 0)' : 'none');
-
-    for (let i = 1; i <= maxIngredient; i += 1) {
-      if (variable[`strIngredient${i}`]) {
-        ingredients.push(
-          <li
-            key={ i }
-            data-testid={ `${i - 1}-ingredient-name-and-measure` }
-          >
-            <label
-              htmlFor={ i }
-              data-testid={ `${i - 1}-ingredient-step` }
-              style={ {
-                textDecoration: isChecked(variable[`strIngredient${i}`]),
-              } }
-            >
-              <input
-                type="checkbox"
-                onChange={ handleChecked }
-                checked={ checked.includes(variable[`strIngredient${i}`]) }
-                value={ variable[`strIngredient${i}`] }
-              />
-              {variable[`strIngredient${i}`]}
-              {' '}
-              -
-              {' '}
-              {variable[`strMeasure${i}`]}
-            </label>
-          </li>,
-        );
-      }
-    }
-    return ingredients;
   };
 
   return (
@@ -155,14 +167,20 @@ function RecipeInProgress() {
             <button
               type="button"
               data-testid="share-btn"
+              onClick={ () => copyToClipboard(id) }
             >
               Share
             </button>
+            {copyLink && <span>Link copied!</span>}
             <button
               type="button"
-              data-testid="favorite-btn"
+              onClick={ () => favoriteRecipe() }
             >
-              Favorite
+              <img
+                data-testid="favorite-btn"
+                src={ favorite ? blackHeart : whiteHeart }
+                alt="share"
+              />
             </button>
             <button
               type="button"
@@ -179,7 +197,7 @@ function RecipeInProgress() {
             {meals.strCategory}
           </p>
           <h5>Ingredients:</h5>
-          <ul>{callIngredients(drinkORmeal)}</ul>
+          <ul>{callIngredients(meals, undefined, isChecked, handleChecked)}</ul>
           <h5>Instructions:</h5>
           <p data-testid="instructions">{meals.strInstructions}</p>
         </div>
@@ -196,14 +214,20 @@ function RecipeInProgress() {
             <button
               type="button"
               data-testid="share-btn"
+              onClick={ () => copyToClipboard(id) }
             >
               Share
             </button>
+            {copyLink && <span>Link copied!</span>}
             <button
               type="button"
-              data-testid="favorite-btn"
+              onClick={ () => favoriteRecipe() }
             >
-              Favorite
+              <img
+                data-testid="favorite-btn"
+                src={ favorite ? blackHeart : whiteHeart }
+                alt="share"
+              />
             </button>
             <button
               type="button"
@@ -216,7 +240,7 @@ function RecipeInProgress() {
           </div>
           <p data-testid="recipe-category">{drinks.strAlcoholic}</p>
           <h5>Ingredients:</h5>
-          <ul>{callIngredients(drinkORmeal)}</ul>
+          <ul>{callIngredients(undefined, drinks, isChecked, handleChecked)}</ul>
           <h5>Instructions:</h5>
           <p data-testid="instructions">{drinks.strInstructions}</p>
         </div>
