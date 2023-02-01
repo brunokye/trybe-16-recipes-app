@@ -25,7 +25,6 @@ function RecipeInProgress() {
   const [copyLink, setCopyLink] = useState(false);
   const [favorite, setFavorite] = useState(false);
   const [favoriteRecipes, setFavoriteRecipes] = useLocalStorage('favoriteRecipes', []);
-
   const magicNum = {
     one: -1,
     three: 3,
@@ -120,7 +119,6 @@ function RecipeInProgress() {
       setFavoriteRecipes([...favoriteRecipes, newRecipe]);
       return setFavorite(true);
     }
-
     const removeRecipe = favoriteRecipes.filter((recipes) => recipes.id !== newRecipe.id);
     setFavoriteRecipes([...removeRecipe]);
     return setFavorite(false);
