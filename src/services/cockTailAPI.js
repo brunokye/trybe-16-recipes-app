@@ -37,6 +37,16 @@ export const fetchByFirstLetter = async (searchInput) => {
   return drinks || [];
 };
 
+export const fetchDrinksById = async (id) => {
+  const response = await fetch(`${baseUrl}lookup.php?i=${id}`);
+
+  const { drinks } = await parseJSONResponse(response, []);
+  if (!drinks || drinks.length === 0) {
+    global.alert(messages.notFound);
+  }
+  return drinks || [];
+};
+
 export const fetchByType = async (searchType, searchInput) => {
   switch (searchType) {
   case 'ingredient':
@@ -51,6 +61,10 @@ export const fetchByType = async (searchType, searchInput) => {
       return [];
     }
     return fetchByFirstLetter(searchInput);
+
+  case 'id':
+    return fetchDrinksById(searchInput);
+
   default:
     break;
   }
