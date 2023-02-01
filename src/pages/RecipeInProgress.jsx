@@ -8,37 +8,22 @@ function RecipeInProgress() {
   const location = useLocation();
   const path = location.pathname;
   const pathArray = path.split('/');
-  const typeOfUrl = pathArray[1];
 
-  // const defaultChecked = {
-  //   [typeOfUrl]: {
-  //     [id]: [],
-  //   },
-  // };
+  const localStorageGet = readObject('inProgressRecipes') || [];
 
-  // const localStorageGet = readObject('inProgressRecipes', defaultChecked);
-
-  // const verificaIDLocal = Object.entries(localStorageGet[typeOfUrl]).some((key) => key[0] === id);
-
-  // const final = verificaIDLocal ? localStorageGet : defaultChecked;
-  const [test, setTest] = useState({});
   const [meals, setMeals] = useState([]);
   const [drinks, setDrinks] = useState([]);
+  const [checked, setChecked] = useState(localStorageGet);
   const [isDisabled, setIsDisabled] = useState(true);
 
-  const drinkORmeal = typeOfUrl;
+  const drinkORmeal = pathArray[1];
 
   const maxIngredientsMeals = 20;
   const maxIngredientsDrinks = 15;
   const ingredients = [];
 
   useEffect(() => {
-    const localStorageGet = readObject('inProgressRecipes', {});
-    setTest(localStorageGet);
-  }, []);
-
-  useEffect(() => {
-    if (typeOfUrl === 'meals') {
+    if (pathArray[1] === 'meals') {
       const fetchByID = async () => {
         const response = await fetch(
           `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`,
@@ -60,19 +45,17 @@ function RecipeInProgress() {
   }, [id]);
 
   const checkDisabledBtn = () => {
-    try {
-      if (test[typeOfUrl][id].length === ingredients.length) {
-        setIsDisabled(false);
-      }
-    } catch (error) {
+    if (checked.length === ingredients.length) {
+      setIsDisabled(false);
+    } else {
       setIsDisabled(true);
     }
   };
 
   useEffect(() => {
-    saveObject('inProgressRecipes', test);
+    saveObject('inProgressRecipes', checked);
     checkDisabledBtn();
-  }, [test]);
+  }, [checked]);
 
   const magicNum = {
     one: -1,
@@ -107,64 +90,23 @@ function RecipeInProgress() {
     history.push('/done-recipes');
   };
 
-  // const handleChecked = (event) => {
-  //   const checkedList = { ...test };
-  //   const findBoolean = Object.entries(checkedList).some((item) => item.id === id);
-  //   const checkValues = findBoolean ? test[typeOfUrl][id] : [];
-  //   if (!findBoolean) {
-  //     console.log({ ...checkValues });
-  //     setTest(
-  //       {
-  //         [typeOfUrl]: {
-  //           ...checkValues,
-  //           [id]: [...checkValues, event.target.value],
-  //         },
-  //       },
-  //     );
-  //   } else {
-
-  //   }
-  // };
-  const handleChecked = (event) => {
-    const findBoolean = Boolean(test[typeOfUrl] && test[typeOfUrl][id]);
-    let set = {};
-    const item = event.target.value;
-    if (!findBoolean) {
-      set = {
-        ...test,
-        [typeOfUrl]: {
-          ...test[typeOfUrl],
-          [id]: [event.target.value],
-        },
-      };
-    } else {
-      const existsType = test[typeOfUrl] ? test[typeOfUrl] : [];
-      set = {
-        [typeOfUrl]: {
-          ...existsType,
-          [id]: [
-            ...test[typeOfUrl][id],
-            item,
-          ],
-        },
-      };
-    }
-    setTest(set);
-  };
-
-  const isChecked = (ingredient) => {
-    try {
-      if (test[typeOfUrl][id]?.includes(ingredient)) {
-        return 'line-through solid rgb(0, 0, 0)';
-      }
-    } catch (error) {
-      return 'none';
-    }
-  };
-
   const callIngredients = (string) => {
     const maxIngredient = string === 'meals' ? maxIngredientsMeals : maxIngredientsDrinks;
     const variable = string === 'meals' ? meals : drinks;
+
+    const handleChecked = (event) => {
+      let updatedChecked = [...checked];
+      if (event.target.checked) {
+        updatedChecked = [...checked, event.target.value];
+      } else {
+        updatedChecked.splice(updatedChecked.indexOf(event.target.value), 1);
+      }
+      setChecked(updatedChecked);
+    };
+
+    const isChecked = (ingredient) => (checked
+      .includes(ingredient) ? 'line-through solid rgb(0, 0, 0)' : 'none');
+
     for (let i = 1; i <= maxIngredient; i += 1) {
       if (variable[`strIngredient${i}`]) {
         ingredients.push(
@@ -182,13 +124,7 @@ function RecipeInProgress() {
               <input
                 type="checkbox"
                 onChange={ handleChecked }
-                checked={ () => {
-                  try {
-                    return test[typeOfUrl][id]?.includes(variable[`strIngredient${i}`]);
-                  } catch (error) {
-                    return false;
-                  }
-                } }
+                checked={ checked.includes(variable[`strIngredient${i}`]) }
                 value={ variable[`strIngredient${i}`] }
               />
               {variable[`strIngredient${i}`]}
