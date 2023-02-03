@@ -4,6 +4,8 @@ import Header from '../components/Header';
 import RecipeCard from '../components/RecipeCard';
 import FilterBtn from '../components/FilterBtn';
 
+import '../styles/doneRecipes.css';
+
 const TYPES = ['All', 'Meals', 'Drinks'];
 
 export default function DoneRecipes() {
@@ -19,7 +21,7 @@ export default function DoneRecipes() {
   return (
     <div>
       <Header title="Done Recipes" />
-      <section id="filters">
+      <section id="filters" className="filtersDoneRecepies">
         {
           TYPES.map((filterType, index) => (
             <FilterBtn
@@ -30,89 +32,91 @@ export default function DoneRecipes() {
             />))
         }
       </section>
-      {
-        doneRecipesLS !== null && (
-          <section id="cards">
-            {
-              usedFilter === 'Meals' && (
-                doneRecipes
-                  .filter((recipe) => recipe.type === 'meal')
-                  .map((recipe, index) => (
-                    <RecipeCard
-                      title="Done Recipes"
-                      key={ recipe.id }
-                      recipeId={ recipe.id }
-                      index={ index }
-                      image={ recipe.image }
-                      name={ recipe.name }
-                      category={ recipe.category }
-                      doneDate={ recipe.doneDate }
-                      tags={ recipe.tags }
-                      nationality={ recipe.nationality }
-                      alcoholicOrNot={ recipe.alcoholicOrNot }
-                      type={ recipe.type }
-                    />
-                  ))
-              )
-            }
-            {
-              usedFilter === 'Drinks' && (
-                doneRecipes
-                  .filter((recipe) => recipe.type === 'drink')
-                  .map((recipe, index) => (
-                    <RecipeCard
-                      title="Done Recipes"
-                      key={ recipe.id }
-                      recipeId={ recipe.id }
-                      index={ index }
-                      image={ recipe.image }
-                      name={ recipe.name }
-                      category={ recipe.category }
-                      doneDate={ recipe.doneDate }
-                      tags={ recipe.tags }
-                      nationality={ recipe.nationality }
-                      alcoholicOrNot={ recipe.alcoholicOrNot }
-                      type={ recipe.type }
-                    />
-                  ))
-              )
-            }
-            {
-              usedFilter === 'All' && (
-                doneRecipes
-                  .map((recipe, index) => (
-                    <RecipeCard
-                      title="Done Recipes"
-                      key={ recipe.id }
-                      recipeId={ recipe.id }
-                      index={ index }
-                      image={ recipe.image }
-                      name={ recipe.name }
-                      category={ recipe.category }
-                      doneDate={ recipe.doneDate }
-                      tags={ recipe.tags }
-                      nationality={ recipe.nationality }
-                      alcoholicOrNot={ recipe.alcoholicOrNot }
-                      type={ recipe.type }
-                    />
-                  ))
-              )
-            }
-          </section>
-        )
-      }
-      {
-        doneRecipesLS === null && (
-          <div>
-            <h6>Você ainda não concluiu nenhuma receita!</h6>
-            <Link to="/meals">
-              <span>
-                Escolha uma receita para fazer
-              </span>
-            </Link>
-          </div>
-        )
-      }
+      <div className="doneRecepiesContainer">
+        {
+          doneRecipesLS !== null && (
+            <section id="cards">
+              {
+                usedFilter === 'Meals' && (
+                  doneRecipes
+                    .filter((recipe) => recipe.type === 'meal')
+                    .map((recipe, index) => (
+                      <RecipeCard
+                        title="Done Recipes"
+                        key={ recipe.id }
+                        recipeId={ recipe.id }
+                        index={ index }
+                        image={ recipe.image }
+                        name={ recipe.name }
+                        category={ recipe.category }
+                        doneDate={ recipe.doneDate }
+                        tags={ recipe.tags }
+                        nationality={ recipe.nationality }
+                        alcoholicOrNot={ recipe.alcoholicOrNot }
+                        type={ recipe.type }
+                      />
+                    ))
+                )
+              }
+              {
+                usedFilter === 'Drinks' && (
+                  doneRecipes
+                    .filter((recipe) => recipe.type === 'drink')
+                    .map((recipe, index) => (
+                      <RecipeCard
+                        title="Done Recipes"
+                        key={ recipe.id }
+                        recipeId={ recipe.id }
+                        index={ index }
+                        image={ recipe.image }
+                        name={ recipe.name }
+                        category={ recipe.category }
+                        doneDate={ recipe.doneDate }
+                        tags={ recipe.tags }
+                        nationality={ recipe.nationality }
+                        alcoholicOrNot={ recipe.alcoholicOrNot }
+                        type={ recipe.type }
+                      />
+                    ))
+                )
+              }
+              {
+                usedFilter === 'All' && (
+                  doneRecipes
+                    .map((recipe, index) => (
+                      <RecipeCard
+                        title="Done Recipes"
+                        key={ recipe.id }
+                        recipeId={ recipe.id }
+                        index={ index }
+                        image={ recipe.image }
+                        name={ recipe.name }
+                        category={ recipe.category }
+                        doneDate={ recipe.doneDate }
+                        tags={ recipe.tags }
+                        nationality={ recipe.nationality }
+                        alcoholicOrNot={ recipe.alcoholicOrNot }
+                        type={ recipe.type }
+                      />
+                    ))
+                )
+              }
+            </section>
+          )
+        }
+        {
+          doneRecipesLS === null && (
+            <div>
+              <h6>Você ainda não concluiu nenhuma receita!</h6>
+              <Link to="/meals">
+                <span>
+                  Escolha uma receita para fazer
+                </span>
+              </Link>
+            </div>
+          )
+        }
+      </div>
     </div>
   );
 }

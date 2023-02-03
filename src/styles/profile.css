@@ -1,15 +1,21 @@
-.card-container {
+.profileContainer {
   align-items: center;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   justify-content: center;
-  margin: 2rem auto;
-  padding: 0 20px;
-  width: 100%;
+  height: 85vh;
 }
 
-.categories-container {
+.test {
   display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.buttonsContainer {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   margin: 1.5rem auto;
   max-width: 600px;
@@ -17,7 +23,7 @@
   width: 100%;
 }
 
-.categories-container button {
+.buttonsContainer button {
   background-color: #ec3232;
   border: none;
   border-radius: 12px;
@@ -30,11 +36,14 @@
   transition: 200ms ease-in-out;
 }
 
-.categories-container button:hover {
+.buttonsContainer button:hover {
   background-color: #9b1616;
   transition: 200ms ease-in-out;
 }
 
-.recipesContainer {
-  margin-bottom: 100px;
+.profileContainer span {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0.5rem;
+  color: #ec3232;
 }

@@ -34,46 +34,48 @@ export default function Recipes() {
   const categorySize = 5;
 
   return (
-    <div>
-      <Header
-        title={ pathname }
-        searchEnabled
-      />
-      <h1>Recipes</h1>
-      <div className="categories-container">
-        { categories.slice(0, categorySize).map((category) => (
+    <div className="test">
+
+      <div className="recipesContainer">
+        <Header
+          title={ pathname }
+          searchEnabled
+        />
+        <div className="categories-container">
+          { categories.slice(0, categorySize).map((category) => (
+            <button
+              type="button"
+              data-testid={ `${category.strCategory}-category-filter` }
+              key={ category.strCategory }
+              onClick={ () => {
+                const cat = categoryFilter === category.strCategory
+                  ? '' : category.strCategory;
+                setCategoryFilter(cat);
+              } }
+            >
+              { category.strCategory }
+            </button>
+          ))}
           <button
             type="button"
-            data-testid={ `${category.strCategory}-category-filter` }
-            key={ category.strCategory }
-            onClick={ () => {
-              const cat = categoryFilter === category.strCategory
-                ? '' : category.strCategory;
-              setCategoryFilter(cat);
-            } }
+            data-testid="All-category-filter"
+            onClick={ () => setCategoryFilter('') }
           >
-            { category.strCategory }
+            All
           </button>
-        ))}
-        <button
-          type="button"
-          data-testid="All-category-filter"
-          onClick={ () => setCategoryFilter('') }
-        >
-          All
-        </button>
-      </div>
-      <div className="card-container">
-        { recipes.slice(0, pageSize).map((recipe, index) => (
-          <RecipeCard
-            title={ pathname ? 'Meals' : 'Drinks' }
-            key={ recipe[idField] }
-            recipe={ recipe }
-            index={ index }
-            id={ recipe[idField] }
-            basePath={ isFood ? '/meals' : '/drinks' }
-          />
-        ))}
+        </div>
+        <div className="card-container">
+          { recipes.slice(0, pageSize).map((recipe, index) => (
+            <RecipeCard
+              title={ pathname ? 'Meals' : 'Drinks' }
+              key={ recipe[idField] }
+              recipe={ recipe }
+              index={ index }
+              id={ recipe[idField] }
+              basePath={ isFood ? '/meals' : '/drinks' }
+            />
+          ))}
+        </div>
       </div>
       <Footer />
     </div>
