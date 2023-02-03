@@ -3,6 +3,8 @@ import { useHistory } from 'react-router-dom';
 import { isValidEmail, isValidPassword } from '../helpers';
 import { saveUser } from '../services/userLS';
 
+import '../styles/login.css';
+
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,36 +25,39 @@ export default function Login() {
   }, [email, password]);
 
   return (
-    <div>
-      <h1>Login</h1>
-      <label htmlFor="email">
-        Email
-        <input
-          type="email"
-          id="email"
-          data-testid="email-input"
-          onChange={ ({ target: { value } }) => setEmail(value) }
-          value={ email }
-        />
-      </label>
-      <label htmlFor="password">
-        Password
-        <input
-          type="password"
-          id="password"
-          data-testid="password-input"
-          onChange={ ({ target: { value } }) => setPassword(value) }
-          value={ password }
-        />
-      </label>
-      <button
-        type="button"
-        data-testid="login-submit-btn"
-        onClick={ doLogin }
-        disabled={ disabled }
-      >
-        Login
-      </button>
+    <div className="container">
+      <div className="loginContainer">
+        <h4>oneClick Recipes</h4>
+        <h6>Login</h6>
+        <label htmlFor="email">
+          <input
+            placeholder="e-mail"
+            type="email"
+            id="email"
+            data-testid="email-input"
+            onChange={ ({ target: { value } }) => setEmail(value) }
+            value={ email }
+          />
+        </label>
+        <label htmlFor="password">
+          <input
+            placeholder="Password"
+            type="password"
+            id="password"
+            data-testid="password-input"
+            onChange={ ({ target: { value } }) => setPassword(value) }
+            value={ password }
+          />
+        </label>
+        <button
+          type="button"
+          data-testid="login-submit-btn"
+          onClick={ doLogin }
+          disabled={ disabled }
+        >
+          Login
+        </button>
+      </div>
     </div>
   );
 }
