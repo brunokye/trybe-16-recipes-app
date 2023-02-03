@@ -4,6 +4,8 @@ import { useLocation } from 'react-router-dom';
 import DrinksContext from '../context/DrinksContext';
 import FoodContext from '../context/FoodContext';
 
+import '../styles/searchbar.css';
+
 export default function SearchBar() {
   const location = useLocation();
   const isFood = location.pathname === '/meals';
@@ -20,17 +22,18 @@ export default function SearchBar() {
   const [radio, setRadio] = useState(searchType);
 
   return (
-    <div>
+    <div className="searchbarContainer">
       <input
+        placeholder="Search..."
+        className="searchInput"
         data-testid="search-input"
         type="text"
         onChange={ ({ target: { value } }) => setText(value) }
         value={ text }
       />
-      <div>
+      <div className="radiosContainer">
         <label htmlFor="ingredient">
           {' '}
-          Ingredient
           <input
             type="radio"
             data-testid="ingredient-search-radio"
@@ -39,11 +42,11 @@ export default function SearchBar() {
             defaultChecked={ radio === 'ingredient' }
             onClick={ () => setRadio('ingredient') }
           />
+          Ingredient
         </label>
 
         <label htmlFor="name">
           {' '}
-          Name
           <input
             type="radio"
             data-testid="name-search-radio"
@@ -52,11 +55,11 @@ export default function SearchBar() {
             defaultChecked={ radio === 'name' }
             onClick={ () => setRadio('name') }
           />
+          Name
         </label>
 
         <label htmlFor="first-letter">
           {' '}
-          First Letter
           <input
             type="radio"
             data-testid="first-letter-search-radio"
@@ -65,9 +68,11 @@ export default function SearchBar() {
             defaultChecked={ radio === 'first-letter' }
             onClick={ () => setRadio('first-letter') }
           />
+          First Letter
         </label>
 
         <button
+          className="searchButton"
           type="button"
           data-testid="exec-search-btn"
           onClick={ () => {

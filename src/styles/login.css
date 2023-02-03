@@ -14,10 +14,10 @@
 }
 
 .loginContainer {
-  filter: drop-shadow(10px 10px 7px #69696948);
-  background-color: #fff;
+  background-color: white;
   border-radius: 15px;
   display: flex;
+  filter: drop-shadow(10px 10px 7px #69696948);
   flex-direction: column;
   padding: 20px;
 }
@@ -47,10 +47,20 @@
   width: 100%;
 }
 
+.loginContainer button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
 .loginContainer button:hover {
   background-color: #ec3232;
   opacity: 0.8;
 }
+
+.loginContainer button:disabled:hover {
+  background-color: #999;
+}
+
 
 .loginContainer h6, .loginContainer h4 {
   text-align: center;

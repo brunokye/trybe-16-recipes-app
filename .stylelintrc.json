@@ -82,6 +82,13 @@
     "number-leading-zero": "always",
     "number-max-precision": 3,
     "number-no-trailing-zeros": true,
+    "order/order": [
+      "custom-properties",
+      "dollar-variables",
+      "declarations",
+      "at-rules",
+      "rules"
+    ],
     "order/properties-alphabetical-order": true,
     "property-case": "lower",
     "property-no-unknown": true,
