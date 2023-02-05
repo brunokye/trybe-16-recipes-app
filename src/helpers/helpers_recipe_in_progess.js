@@ -1,3 +1,5 @@
+import { readObject, saveObject } from './localStorage';
+
 export const newRecipe = (meals, drinks, typeOfUrl, magicNum) => ({
   id: meals.idMeal || drinks.idDrink,
   type: typeOfUrl.slice(0, magicNum.one),
@@ -19,6 +21,7 @@ export const callIngredients = (
   const variable = meals !== undefined ? meals : drinks;
   for (let i = 1; i <= magicNum; i += 1) {
     if (variable[`strIngredient${i}`]) {
+      console.log(variable);
       ingredients.push(
         <li
           key={ i }
@@ -34,6 +37,7 @@ export const callIngredients = (
             } }
           >
             <input
+              id={ i }
               type="checkbox"
               onChange={ handleChecked }
               checked={ isChecked(variable[`strIngredient${i}`]) }
@@ -50,4 +54,26 @@ export const callIngredients = (
     }
   }
   return ingredients;
+};
+
+const magicNum = -1;
+
+export const handleFinishRecipeBtnHelper = (meals, drinks, typeOfUrl) => {
+  const localStorageLoad = readObject('doneRecipes', []);
+  const doneRecipes = [...localStorageLoad];
+  const date = new Date();
+  const doneDate = date.toISOString();
+  const doneRecipe = {
+    id: meals.idMeal || drinks.idDrink,
+    type: typeOfUrl.slice(0, magicNum),
+    category: meals.strCategory || drinks.strCategory,
+    alcoholicOrNot: drinks.strAlcoholic || '',
+    name: meals.strMeal || drinks.strDrink,
+    image: meals.strMealThumb || drinks.strDrinkThumb,
+    doneDate,
+    nationality: meals.strArea || '',
+    tags: meals.strTags ? meals.strTags.split(',') : [],
+  };
+  doneRecipes.push(doneRecipe);
+  saveObject('doneRecipes', doneRecipes);
 };

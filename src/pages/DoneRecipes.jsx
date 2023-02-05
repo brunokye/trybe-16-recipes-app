@@ -107,10 +107,10 @@ export default function DoneRecipes() {
         {
           doneRecipesLS === null && (
             <div>
-              <h6>Você ainda não concluiu nenhuma receita!</h6>
+              <h6>You have not completed any recipe yet!</h6>
               <Link to="/meals">
                 <span>
-                  Escolha uma receita para fazer
+                  Choose a recipe to make.
                 </span>
               </Link>
             </div>

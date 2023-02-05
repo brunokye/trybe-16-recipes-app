@@ -30,6 +30,16 @@
   transition: 200ms ease-in-out;
 }
 
+@media screen and ( max-width : 768px ) {
+
+  .categories-container {
+    flex-flow: row wrap;
+    gap: 0.5rem;
+    max-width: fit-content;
+    padding: 0.5rem 1rem;
+  }
+}
+
 .categories-container button:hover {
   background-color: #9b1616;
   transition: 200ms ease-in-out;

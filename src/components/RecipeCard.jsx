@@ -24,7 +24,7 @@ export default function RecipeCard({
     <section className="cardContainer">
       {
         title === 'Done Recipes' && (
-          <div title="card" name="card">
+          <div title="card" name="card" className="cards">
             { type === 'meal' && (
               <div data-testid="card" name="AllMeal" className="divCard">
                 <div name="image">

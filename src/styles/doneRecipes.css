@@ -6,6 +6,10 @@
   padding: 1rem;
 }
 
+.cards button {
+  background-color: white;
+}
+
 .filtersDoneRecepies button {
   background-color: #cc2c2c;
   border: none;
@@ -33,10 +37,20 @@
 }
 
 .doneRecepiesContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.cards {
   align-items: center;
+  background-color: white;
+  border-radius: 2rem;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  margin: 1rem;
-  position: sticky;
+  height: auto;
+  justify-content: space-around;
+  margin: 0.5rem;
+  transition: 200ms ease-in-out;
 }

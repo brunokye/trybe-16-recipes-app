@@ -2,8 +2,8 @@
   align-items: center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   height: 85vh;
+  justify-content: center;
 }
 
 .test {
@@ -42,8 +42,8 @@
 }
 
 .profileContainer span {
+  color: #ec3232;
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0.5rem;
-  color: #ec3232;
 }

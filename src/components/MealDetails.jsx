@@ -8,6 +8,7 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeart from '../images/whiteHeartIcon.svg';
 import blackHeart from '../images/blackHeartIcon.svg';
+import '../styles/recipeDetails.css';
 
 export default function MealDetails({ result }) {
   const [ingredients, setIngredients] = useState([]);
@@ -15,8 +16,15 @@ export default function MealDetails({ result }) {
   const [favorite, setFavorite] = useState(false);
   const [favoriteRecipes, setFavoriteRecipes] = useLocalStorage('favoriteRecipes', []);
   const history = useHistory();
-  const { idMeal, strMealThumb, strMeal, strArea,
-    strCategory, strInstructions, strYoutube } = result;
+  const {
+    idMeal,
+    strMealThumb,
+    strMeal,
+    strArea,
+    strCategory,
+    strInstructions,
+    strYoutube,
+  } = result;
 
   const newRecipe = {
     id: idMeal,
@@ -45,12 +53,10 @@ export default function MealDetails({ result }) {
     if (result) {
       for (let i = 1; i <= maxIngredient; i += 1) {
         if (result[`strIngredient${i}`]) {
-          ingredientList.push(
-            {
-              ingredient: result[`strIngredient${i}`],
-              measure: result[`strMeasure${i}`],
-            },
-          );
+          ingredientList.push({
+            ingredient: result[`strIngredient${i}`],
+            measure: result[`strMeasure${i}`],
+          });
         }
       }
     }
@@ -58,11 +64,14 @@ export default function MealDetails({ result }) {
     setIngredients(ingredientList);
   }, [result]);
 
+  const magicNum = 1000;
+
   const copyToClipboard = (id) => {
     const copy = require('clipboard-copy');
     const url = `http://localhost:3000/meals/${id}`;
     copy(url);
     setCopyLink(true);
+    setTimeout(() => setCopyLink(false), magicNum);
   };
 
   const favoriteRecipe = () => {
@@ -82,73 +91,88 @@ export default function MealDetails({ result }) {
   }
   if (ingredients.length === 0) return <div>Loading...</div>;
   return (
-    <div className="recipe-container">
-      <div>
-        <button
-          type="button"
-          onClick={ () => copyToClipboard(idMeal) }
-        >
-          <img
-            data-testid="share-btn"
-            src={ shareIcon }
-            alt="share"
-          />
-        </button>
-
-        <button
-          type="button"
-          onClick={ () => favoriteRecipe() }
-        >
-          <img
-            data-testid="favorite-btn"
-            src={ favorite ? blackHeart : whiteHeart }
-            alt="share"
-          />
-        </button>
-
-        <div>
-          { copyLink && (
-            <span>Link copied!</span>
-          ) }
-        </div>
-      </div>
-
+    <div className="recipeContainer">
+      <h2
+        data-testid="recipe-title"
+        className="titleDetails"
+      >
+        {strMeal}
+      </h2>
       <img
         data-testid="recipe-photo"
-        className="img-size"
+        className="imageDetails"
         src={ strMealThumb }
         alt={ strMeal }
       />
 
-      <h2 data-testid="recipe-title">{ strMeal }</h2>
-      <h3 data-testid="recipe-category">{ strCategory }</h3>
-      <ul>
-        {ingredients.map(({ ingredient, measure }, index) => (
-          <li
-            data-testid={ `${index}-ingredient-name-and-measure` }
-            key={ index }
+      <div className="buttonContainerDetails">
+        <div className="buttonContainerDetailsButtons">
+          <button
+            type="button"
+            onClick={ () => copyToClipboard(idMeal) }
           >
-            {ingredient}
-            {' '}
-            -
-            {' '}
-            {measure}
-          </li>
-        ))}
-      </ul>
+            <img
+              data-testid="share-btn"
+              src={ shareIcon }
+              alt="share"
+            />
+          </button>
 
-      <p data-testid="instructions">{ strInstructions }</p>
+          <button
+            type="button"
+            onClick={ () => favoriteRecipe() }
+          >
+            <img
+              data-testid="favorite-btn"
+              src={ favorite ? blackHeart : whiteHeart }
+              alt="share"
+            />
+          </button>
+        </div>
+        {copyLink && <span>Link copied!</span>}
+      </div>
+      <h3 data-testid="recipe-category">{strCategory}</h3>
+      <div className="ingredientsNinstructions">
+        <ul>
+          {ingredients.map(({ ingredient, measure }, index) => (
+            <li
+              data-testid={ `${index}-ingredient-name-and-measure` }
+              key={ index }
+            >
+              {ingredient}
+              {' '}
+              -
+              {' '}
+              {measure}
+            </li>
+          ))}
+        </ul>
 
-      <iframe
-        data-testid="video"
-        width="560"
-        height="315"
-        src={ strYoutube.replace('watch?v=', 'embed/') }
-        title={ strMeal }
-        allowFullScreen
-      />
+        <p
+          data-testid="instructions"
+          className="instructionContainer"
+        >
+          {strInstructions}
+        </p>
+      </div>
 
-      <Carousel pathname="meals" show={ 2 } />
+      {strYoutube && (
+        <iframe
+          data-testid="video"
+          width="560"
+          height="315"
+          src={ strYoutube.replace('watch?v=', 'embed/') }
+          title={ strMeal }
+          allowFullScreen
+        />
+      )}
+
+      <div className="carousel">
+        <Carousel
+          pathname="meals"
+          show={ 2 }
+        />
+      </div>
 
       <Link to={ `/meals/${idMeal}/in-progress` }>
         <button
@@ -156,7 +180,7 @@ export default function MealDetails({ result }) {
           className="start-button"
           type="button"
         >
-          { idInProgress ? 'Continue Recipe' : 'Start Recipe'}
+          {idInProgress ? 'Continue Recipe' : 'Start Recipe'}
         </button>
       </Link>
     </div>
