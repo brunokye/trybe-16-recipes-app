@@ -24,7 +24,7 @@ export default function RecipeCard({
     <section className="cardContainer">
       {
         title === 'Done Recipes' && (
-          <div title="card" name="card" className="cards">
+          <div title="card" name="card">
             { type === 'meal' && (
               <div data-testid="card" name="AllMeal" className="divCard">
                 <div name="image">
@@ -78,6 +78,23 @@ export default function RecipeCard({
                         ))
                     }
                   </div>
+                </div>
+                <div name="share">
+                  <button
+                    type="button"
+                    onClick={ () => copyToClipboard(recipeId) }
+                  >
+                    <img
+                      src={ shareIcon }
+                      alt="Ícone para compartilhar receita."
+                      data-testid={ `${index}-horizontal-share-btn` }
+                      width="20"
+                      height="20"
+                    />
+                  </button>
+                  { copyLink && (
+                    <span>Link copied!</span>
+                  ) }
                 </div>
               </div>
             ) }
