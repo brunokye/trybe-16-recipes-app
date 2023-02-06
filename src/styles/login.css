@@ -65,3 +65,14 @@
 .loginContainer h6, .loginContainer h4 {
   text-align: center;
 }
+
+.titleLogin {
+  background-color: #ec3232;
+  border-radius: 20px;
+  color: white;
+  filter: drop-shadow(10px 10px 7px #69696948);
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  padding: 1rem;
+}

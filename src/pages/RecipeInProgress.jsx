@@ -129,7 +129,6 @@ function RecipeInProgress() {
     setFavoriteRecipes([...removeRecipe]);
     return setFavorite(false);
   };
-
   useEffect(() => {
     saveObject('inProgressRecipes', checked);
     checkDisabledBtn();
@@ -172,6 +171,7 @@ function RecipeInProgress() {
                 data-testid="favorite-btn"
                 src={ favorite ? blackHeart : whiteHeart }
                 alt="share"
+                width="26px"
               />
             </button>
             <button

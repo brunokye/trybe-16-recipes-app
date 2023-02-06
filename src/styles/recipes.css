@@ -8,6 +8,11 @@
   width: 100%;
 }
 
+.test {
+  background-color: #eee;
+  min-height: 100vh;
+}
+
 .categories-container {
   display: flex;
   justify-content: center;

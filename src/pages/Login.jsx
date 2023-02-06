@@ -26,8 +26,8 @@ export default function Login() {
 
   return (
     <div className="container">
+      <h4 className="titleLogin">oneClick Recipes</h4>
       <div className="loginContainer">
-        <h4>oneClick Recipes</h4>
         <h6>Login</h6>
         <label htmlFor="email">
           <input
