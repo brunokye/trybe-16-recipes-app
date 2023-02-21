@@ -21,12 +21,12 @@ export default function RecipeCard({
   };
 
   return (
-    <section>
+    <section className="cardContainer">
       {
         title === 'Done Recipes' && (
           <div title="card" name="card">
             { type === 'meal' && (
-              <div data-testid="card" name="AllMeal">
+              <div data-testid="card" name="AllMeal" className="divCard">
                 <div name="image">
                   <Link to={ `/${type}s/${recipeId}` }>
                     <img
@@ -79,10 +79,27 @@ export default function RecipeCard({
                     }
                   </div>
                 </div>
+                <div name="share">
+                  <button
+                    type="button"
+                    onClick={ () => copyToClipboard(recipeId) }
+                  >
+                    <img
+                      src={ shareIcon }
+                      alt="Ícone para compartilhar receita."
+                      data-testid={ `${index}-horizontal-share-btn` }
+                      width="20"
+                      height="20"
+                    />
+                  </button>
+                  { copyLink && (
+                    <span>Link copied!</span>
+                  ) }
+                </div>
               </div>
             ) }
             { type === 'drink' && (
-              <div data-testid="card" name="allDrink">
+              <div data-testid="card" name="allDrink" className="divCard">
                 <div name="image">
                   <Link to={ `/${type}s/${recipeId}` }>
                     <img
@@ -109,7 +126,7 @@ export default function RecipeCard({
                     </h6>
                   </div>
                   <p>
-                    <span>Sone in:</span>
+                    <span>Done in: </span>
                     <span data-testid={ `${index}-horizontal-done-date` }>
                       { doneDate }
                     </span>
@@ -129,51 +146,47 @@ export default function RecipeCard({
                     }
                   </div>
                 </div>
+                <div name="share">
+                  <button
+                    type="button"
+                    onClick={ () => copyToClipboard(recipeId) }
+                  >
+                    <img
+                      src={ shareIcon }
+                      alt="Ícone para compartilhar receita."
+                      data-testid={ `${index}-horizontal-share-btn` }
+                      width="20"
+                      height="20"
+                    />
+                  </button>
+                  { copyLink && (
+                    <span>Link copied!</span>
+                  ) }
+                </div>
               </div>
             ) }
-            <div name="share">
-              <button
-                type="button"
-                onClick={ () => copyToClipboard(recipeId) }
-              >
-                <img
-                  src={ shareIcon }
-                  alt="Ícone para compartilhar receita."
-                  data-testid={ `${index}-horizontal-share-btn` }
-                  width="20"
-                  height="20"
-                />
-              </button>
-              { copyLink && (
-                <span>Link copied!</span>
-              ) }
-            </div>
           </div>
         )
       }
-      {
-        title === ('Meals' || 'Drinks') && (
-          <div>
-            <Link
-              to={ `${basePath}/${id}` }
-            >
-              <div className="card" data-testid={ `${index}-recipe-card` }>
-                <img
-                  data-testid={ `${index}-card-img` }
-                  src={ recipe.strMealThumb || recipe.strDrinkThumb }
-                  alt="recipe"
-                  className="cardImg"
-                />
-                <h3 data-testid={ `${index}-card-name` }>
-                  {recipe.strMeal
-                  || recipe.strDrink}
+      { title === ('Meals' || 'Drinks') && (
 
-                </h3>
-              </div>
-            </Link>
+        <Link
+          to={ `${basePath}/${id}` }
+        >
+          <div className="cardElement" data-testid={ `${index}-recipe-card` }>
+            <img
+              data-testid={ `${index}-card-img` }
+              src={ recipe.strMealThumb || recipe.strDrinkThumb }
+              alt="recipe"
+              className="cardImg"
+            />
+            <h3 data-testid={ `${index}-card-name` }>
+              {recipe.strMeal
+                  || recipe.strDrink}
+            </h3>
           </div>
-        )
-      }
+        </Link>
+      )}
     </section>
   );
 }

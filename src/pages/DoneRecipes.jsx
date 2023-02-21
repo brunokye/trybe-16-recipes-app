@@ -4,6 +4,8 @@ import Header from '../components/Header';
 import RecipeCard from '../components/RecipeCard';
 import FilterBtn from '../components/FilterBtn';
 
+import '../styles/doneRecipes.css';
+
 const TYPES = ['All', 'Meals', 'Drinks'];
 
 export default function DoneRecipes() {
@@ -19,7 +21,7 @@ export default function DoneRecipes() {
   return (
     <div>
       <Header title="Done Recipes" />
-      <section id="filters">
+      <section id="filters" className="filtersDoneRecepies">
         {
           TYPES.map((filterType, index) => (
             <FilterBtn
@@ -104,10 +106,10 @@ export default function DoneRecipes() {
       {
         doneRecipesLS === null && (
           <div>
-            <h6>Você ainda não concluiu nenhuma receita!</h6>
+            <h6>You have not completed any recipe yet!</h6>
             <Link to="/meals">
               <span>
-                Escolha uma receita para fazer
+                Choose a recipe to make.
               </span>
             </Link>
           </div>

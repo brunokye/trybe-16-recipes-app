@@ -9,8 +9,10 @@ import whiteHeart from '../images/whiteHeartIcon.svg';
 import blackHeart from '../images/blackHeartIcon.svg';
 import {
   callIngredients,
+  handleFinishRecipeBtnHelper,
   newRecipe as newRecipeHelper,
 } from '../helpers/helpers_recipe_in_progess';
+import '../styles/recipesInProgress.css';
 
 function RecipeInProgress() {
   const history = useHistory();
@@ -28,6 +30,7 @@ function RecipeInProgress() {
   const magicNum = {
     one: -1,
     three: 3,
+    thousand: 1000,
   };
 
   useEffect(() => {
@@ -36,17 +39,17 @@ function RecipeInProgress() {
   }, []);
 
   useEffect(() => {
+    let fetchByID;
     if (typeOfUrl === 'meals') {
-      const fetchByID = async () => {
+      fetchByID = async () => {
         fetchMealByID('id', id).then((data) => setMeals(data[0]));
       };
-      fetchByID();
     } else {
-      const fetchByID = async () => {
+      fetchByID = async () => {
         fetchDrinkByID('id', id).then((data) => setDrinks(data[0]));
       };
-      fetchByID();
     }
+    fetchByID();
   }, [id]);
 
   const newRecipe = newRecipeHelper(meals, drinks, typeOfUrl, magicNum);
@@ -61,6 +64,7 @@ function RecipeInProgress() {
     const url = `http://localhost:3000/${typeOfUrl}/${idParam}`;
     copy(url);
     setCopyLink(true);
+    setTimeout(() => setCopyLink(false), magicNum.thousand);
   };
 
   const isChecked = (ingredient) => {
@@ -109,6 +113,8 @@ function RecipeInProgress() {
     try {
       if (checked[typeOfUrl][id].length === ingredients.length) {
         setIsDisabled(false);
+      } else {
+        setIsDisabled(true);
       }
     } catch (error) {
       setIsDisabled(true);
@@ -123,40 +129,28 @@ function RecipeInProgress() {
     setFavoriteRecipes([...removeRecipe]);
     return setFavorite(false);
   };
-
   useEffect(() => {
     saveObject('inProgressRecipes', checked);
     checkDisabledBtn();
   }, [checked]);
 
   const handleFinishRecipeBtn = () => {
-    const localStorageLoad = readObject('doneRecipes', []);
-    const doneRecipes = [...localStorageLoad];
-    const date = new Date();
-    const doneDate = date.toISOString();
-    const doneRecipe = {
-      id: meals.idMeal || drinks.idDrink,
-      type: typeOfUrl.slice(0, magicNum.one),
-      category: meals.strCategory || drinks.strCategory,
-      alcoholicOrNot: drinks.strAlcoholic || '',
-      name: meals.strMeal || drinks.strDrink,
-      image: meals.strMealThumb || drinks.strDrinkThumb,
-      doneDate,
-      nationality: meals.strArea || '',
-      tags: meals.strTags ? meals.strTags.split(',') : [],
-    };
-    doneRecipes.push(doneRecipe);
-    saveObject('doneRecipes', doneRecipes);
+    handleFinishRecipeBtnHelper(meals, drinks, typeOfUrl);
     history.push('/done-recipes');
   };
 
   return (
     <div>
-      <h1>Recepies in Progress</h1>
       {meals.length === 0 ? null : (
-        <div>
-          <h3 data-testid="recipe-title">{meals.strMeal}</h3>
+        <div className="RIPContainer">
+          <h2
+            data-testid="recipe-title"
+            className="titleRIP"
+          >
+            {`Recipe in Progress: ${meals.strMeal}`}
+          </h2>
           <img
+            className="imageRIP"
             data-testid="recipe-photo"
             src={ meals.strMealThumb }
             alt={ meals.strMeal }
@@ -169,7 +163,6 @@ function RecipeInProgress() {
             >
               Share
             </button>
-            {copyLink && <span>Link copied!</span>}
             <button
               type="button"
               onClick={ () => favoriteRecipe() }
@@ -178,6 +171,7 @@ function RecipeInProgress() {
                 data-testid="favorite-btn"
                 src={ favorite ? blackHeart : whiteHeart }
                 alt="share"
+                width="26px"
               />
             </button>
             <button
@@ -189,19 +183,25 @@ function RecipeInProgress() {
               Finish Recipe
             </button>
           </div>
-          <p data-testid="recipe-category">
-            {`Category: ${meals.strCategory}`}
-          </p>
-          <h5>Ingredients:</h5>
-          <ul>{callIngredients(meals, undefined, isChecked, handleChecked)}</ul>
-          <h5>Instructions:</h5>
-          <p data-testid="instructions">{meals.strInstructions}</p>
+          {copyLink && <span>Link copied!</span>}
+          <h3 data-testid="recipe-category">{meals.strCategory}</h3>
+          <div className="ingredientsNinstructionsRIP">
+            <ul>{callIngredients(meals, undefined, isChecked, handleChecked)}</ul>
+            <h5 data-testid="instructions">{meals.strInstructions}</h5>
+          </div>
         </div>
       )}
       {drinks.length === 0 ? null : (
-        <div>
-          <h3 data-testid="recipe-title">{drinks.strDrink}</h3>
+        <div className="RIPContainer">
+          <h2
+            data-testid="recipe-title"
+            className="titleRIP"
+          >
+            {`Recipe in Progress: ${drinks.strDrink}`}
+
+          </h2>
           <img
+            className="imageRIP"
             data-testid="recipe-photo"
             src={ drinks.strDrinkThumb }
             alt={ drinks.strDrink }
@@ -214,7 +214,6 @@ function RecipeInProgress() {
             >
               Share
             </button>
-            {copyLink && <span>Link copied!</span>}
             <button
               type="button"
               onClick={ () => favoriteRecipe() }
@@ -234,11 +233,12 @@ function RecipeInProgress() {
               Finish Recipe
             </button>
           </div>
-          <p data-testid="recipe-category">{drinks.strAlcoholic}</p>
-          <h5>Ingredients:</h5>
-          <ul>{callIngredients(undefined, drinks, isChecked, handleChecked)}</ul>
-          <h5>Instructions:</h5>
-          <p data-testid="instructions">{drinks.strInstructions}</p>
+          {copyLink && <span>Link copied!</span>}
+          <h3 data-testid="recipe-category">{drinks.strAlcoholic}</h3>
+          <div className="ingredientsNinstructionsRIP">
+            <ul>{callIngredients(undefined, drinks, isChecked, handleChecked)}</ul>
+            <h5 data-testid="instructions">{drinks.strInstructions}</h5>
+          </div>
         </div>
       )}
     </div>

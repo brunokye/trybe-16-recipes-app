@@ -32,7 +32,7 @@ export default function RecipeDetails() {
 
   if (!result) return <div>Loading...</div>;
   return (
-    <div>
+    <div className="recipeDetailContainer">
       { verifyPath
         ? <MealDetails result={ result[0] } />
         : <DrinkDetails result={ result[0] } />}

@@ -5,37 +5,38 @@ import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
 import SearchBar from './SearchBar';
 
+import '../styles/header.css';
+
 export default function Header({ title, searchEnabled }) {
   const [bar, setBar] = useState(false);
 
   return (
-    <div>
-      <span data-testid="page-title">{ title }</span>
-      { searchEnabled ? (
-        <button
-          type="button"
-          onClick={ () => setBar(!bar) }
-        >
+    <div className="headerContainer">
+      <div className="topContainer">
+        <h3 data-testid="page-title">{ title }</h3>
+
+        { searchEnabled ? (
+          <button
+            className="buttonHeader"
+            type="button"
+            onClick={ () => setBar(!bar) }
+          >
+            <img
+              data-testid="search-top-btn"
+              src={ searchIcon }
+              alt="search"
+            />
+          </button>)
+          : ''}
+        <Link to="profile" className="buttonHeader">
           <img
-            data-testid="search-top-btn"
-            src={ searchIcon }
-            alt="search"
+            data-testid="profile-top-btn"
+            src={ profileIcon }
+            alt="profile"
           />
-        </button>)
-        : ''}
-
-      <Link to="profile">
-        <img
-          data-testid="profile-top-btn"
-          src={ profileIcon }
-          alt="profile"
-        />
-      </Link>
-
-      <div className="search">
-        {bar && <SearchBar />}
+        </Link>
       </div>
-
+      {bar && <SearchBar />}
     </div>
   );
 }

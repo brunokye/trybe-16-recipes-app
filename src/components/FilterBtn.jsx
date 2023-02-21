@@ -23,7 +23,7 @@ export default function FilterBtn(props) {
     >
       {
         filterType === 'All'
-          ? 'All'
+          ? <h3>All</h3>
           : (
             <img
               src={ filterType === 'Meals' ? mealIcon : drinkIcon }

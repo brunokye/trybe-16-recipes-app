@@ -1,20 +1,21 @@
-.card-container {
+.profileContainer {
   align-items: center;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  height: 85vh;
   justify-content: center;
-  margin: 2rem auto;
-  padding: 0 20px;
-  width: 100%;
 }
 
 .test {
-  background-color: #eee;
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
-.categories-container {
+.buttonsContainer {
+  align-items: center;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   margin: 1.5rem auto;
   max-width: 600px;
@@ -22,7 +23,7 @@
   width: 100%;
 }
 
-.categories-container button {
+.buttonsContainer button {
   background-color: #ec3232;
   border: none;
   border-radius: 12px;
@@ -35,21 +36,14 @@
   transition: 200ms ease-in-out;
 }
 
-@media screen and ( max-width : 768px ) {
-
-  .categories-container {
-    flex-flow: row wrap;
-    gap: 0.5rem;
-    max-width: fit-content;
-    padding: 0.5rem 1rem;
-  }
-}
-
-.categories-container button:hover {
+.buttonsContainer button:hover {
   background-color: #9b1616;
   transition: 200ms ease-in-out;
 }
 
-.recipesContainer {
-  margin-bottom: 100px;
+.profileContainer span {
+  color: #ec3232;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0.5rem;
 }

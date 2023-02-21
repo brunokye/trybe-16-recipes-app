@@ -8,6 +8,7 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeart from '../images/whiteHeartIcon.svg';
 import blackHeart from '../images/blackHeartIcon.svg';
+import '../styles/recipeDetails.css';
 
 export default function DrinkDetails({ result }) {
   const [ingredients, setIngredients] = useState([]);
@@ -16,8 +17,13 @@ export default function DrinkDetails({ result }) {
   const [favoriteRecipes, setFavoriteRecipes] = useLocalStorage('favoriteRecipes', []);
   const history = useHistory();
 
-  const { idDrink, strDrinkThumb, strDrink,
-    strAlcoholic, strInstructions, strCategory } = result;
+  const {
+    idDrink,
+    strDrinkThumb,
+    strDrink,
+    strAlcoholic,
+    strInstructions,
+    strCategory } = result;
 
   const newRecipe = {
     id: idDrink,
@@ -46,12 +52,10 @@ export default function DrinkDetails({ result }) {
     if (result) {
       for (let i = 1; i <= maxIngredient; i += 1) {
         if (result[`strIngredient${i}`]) {
-          ingredientList.push(
-            {
-              ingredient: result[`strIngredient${i}`],
-              measure: result[`strMeasure${i}`],
-            },
-          );
+          ingredientList.push({
+            ingredient: result[`strIngredient${i}`],
+            measure: result[`strMeasure${i}`],
+          });
         }
       }
     }
@@ -84,64 +88,78 @@ export default function DrinkDetails({ result }) {
 
   if (ingredients.length === 0) return <div>Loading...</div>;
   return (
-    <div className="recipe-container">
-      <div>
-        <button
-          type="button"
-          onClick={ () => copyToClipboard(idDrink) }
-        >
-          <img
-            data-testid="share-btn"
-            src={ shareIcon }
-            alt="share"
-          />
-        </button>
-
-        <button
-          type="button"
-          onClick={ () => favoriteRecipe() }
-        >
-          <img
-            data-testid="favorite-btn"
-            src={ favorite ? blackHeart : whiteHeart }
-            alt="share"
-          />
-        </button>
-
-        <div>
-          { copyLink && (
-            <span>Link copied!</span>
-          ) }
-        </div>
-      </div>
-
+    <div className="recipeContainer">
+      <h2
+        data-testid="recipe-title"
+        className="titleDetails"
+      >
+        {strDrink}
+      </h2>
       <img
+        className="imageDetails"
         data-testid="recipe-photo"
-        className="img-size"
         src={ strDrinkThumb }
         alt={ strDrink }
       />
-
-      <h2 data-testid="recipe-title">{ strDrink }</h2>
-      <h3 data-testid="recipe-category">{ strAlcoholic }</h3>
-      <ul>
-        {ingredients.map(({ ingredient, measure }, index) => (
-          <li
-            data-testid={ `${index}-ingredient-name-and-measure` }
-            key={ index }
+      <div className="buttonContainerDetails">
+        <div className="buttonContainerDetailsButtons">
+          <button
+            type="button"
+            onClick={ () => copyToClipboard(idDrink) }
           >
-            {ingredient}
-            {' '}
-            -
-            {' '}
-            {measure}
-          </li>
-        ))}
-      </ul>
+            <img
+              data-testid="share-btn"
+              src={ shareIcon }
+              alt="share"
+            />
+          </button>
 
-      <p data-testid="instructions">{ strInstructions }</p>
+          <button
+            type="button"
+            onClick={ () => favoriteRecipe() }
+          >
+            <img
+              data-testid="favorite-btn"
+              src={ favorite ? blackHeart : whiteHeart }
+              alt="share"
+            />
+          </button>
+        </div>
+        <div>{copyLink && <span>Link copied!</span>}</div>
+      </div>
 
-      <Carousel pathname="drinks" show={ 2 } />
+      <h3 data-testid="recipe-category">{strAlcoholic}</h3>
+
+      <div className="ingredientsNinstructions">
+        <ul>
+          {ingredients.map(({ ingredient, measure }, index) => (
+            <li
+              data-testid={ `${index}-ingredient-name-and-measure` }
+              key={ index }
+            >
+              {ingredient}
+              {' '}
+              -
+              {' '}
+              {measure}
+            </li>
+          ))}
+        </ul>
+
+        <p
+          data-testid="instructions"
+          className="instructionContainer"
+        >
+          {strInstructions}
+        </p>
+      </div>
+
+      <div className="carousel">
+        <Carousel
+          pathname="drinks"
+          show={ 2 }
+        />
+      </div>
 
       <Link to={ `/drinks/${idDrink}/in-progress` }>
         <button
@@ -149,7 +167,7 @@ export default function DrinkDetails({ result }) {
           className="start-button"
           type="button"
         >
-          { idInProgress ? 'Continue Recipe' : 'Start Recipe'}
+          {idInProgress ? 'Continue Recipe' : 'Start Recipe'}
         </button>
       </Link>
     </div>

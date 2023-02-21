@@ -17,6 +17,9 @@ export default function Footer() {
         />
 
       </Link>
+      <h4>
+        oneClick Recipes
+      </h4>
       <Link to="/meals">
         <img
           src={ mealIcon }
