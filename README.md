@@ -7,13 +7,13 @@ A base de dados serão 2 APIs distintas, uma para comidas e outra para bebidas. 
 ## Projeto
 
 <div align="center">
-  <img src="https://i.imgur.com/hivzdMb.png" alt="Login" width="125px" height="220px" />
-  <img src="https://i.imgur.com/Pw0ID1A.png" alt="Home" width="125px" height="220px" />
-  <img src="https://i.imgur.com/W26G1uH.png" alt="Drink" width="125px" height="220px" />
-  <img src="https://i.imgur.com/6Alyw03.png" alt="Recipe" width="125px" height="220px" />
-  <img src="https://i.imgur.com/v3MeYez.png" alt="Profile" width="125px" height="220px" />
-  <img src="https://i.imgur.com/xcZOOqR.png" alt="Done Recipes" width="125px" height="220px" />
-  <img src="https://i.imgur.com/xYk2wK5.png" alt="Favorite Recipes" width="125px" height="220px" />
+  <img src="https://i.imgur.com/hivzdMb.png" alt="Login" width="200px" height="353px" />
+  <img src="https://i.imgur.com/Pw0ID1A.png" alt="Home" width="200px" height="353px" />
+  <img src="https://i.imgur.com/W26G1uH.png" alt="Drink" width="200px" height="353px" />
+  <img src="https://i.imgur.com/6Alyw03.png" alt="Recipe" width="200px" height="353px" />
+  <img src="https://i.imgur.com/v3MeYez.png" alt="Profile" width="200px" height="353px" />
+  <img src="https://i.imgur.com/xcZOOqR.png" alt="Done Recipes" width="200px" height="353px" />
+  <img src="https://i.imgur.com/xYk2wK5.png" alt="Favorite Recipes" width="200px" height="353px" />
 </div>
 
 ## Executar Localmente
